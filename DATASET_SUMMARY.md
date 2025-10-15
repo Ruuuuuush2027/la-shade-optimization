@@ -259,7 +259,8 @@ Climate Vulnerability Assessment (CVA) social sensitivity scores by census tract
     "Poverty": 1.5,
     "Unemployed": 5.6,
     "SoVI_Score": 2.25,
-    "SoVI_Thirds": 3
+    "SoVI_Thirds": 3,
+    ...
   },
   "geometry": {
     "type": "Polygon",
@@ -314,12 +315,34 @@ PM2.5 fine particulate matter air quality data from 2015 by census tract (~2,331
 
 ## 11. Tree_Canopy_Coverage.geojson
 
-Tree canopy coverage data (currently empty).
+Tree canopy coverage data, a single record of all coordinates.
 
 ```json
 {
-  "type": "FeatureCollection",
-  "features": []
+  "summary": "Partial GeoJSON FeatureCollection Structure",
+  "top_level_type": "FeatureCollection",
+  "coordinate_reference_system": {
+    "type": "name",
+    "name": "EPSG:4326"
+  },
+  "number_of_features_started": 1,
+  "feature_properties_summary": [
+    {
+      "id": 1,
+      "geometry_type": "Polygon",
+      "coordinates": [
+      [
+        [
+          [-118.009588, 34.051625],
+          [-118.00783, 34.056612],
+          [-118.006322, 34.055671],
+          [-118.009588, 34.051625],
+          ...
+        ]
+      ]
+    ]
+    }
+  ]
 }
 ```
 
