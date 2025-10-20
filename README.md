@@ -2,6 +2,8 @@
 
 proposal doc: https://docs.google.com/document/d/13zeRmjD0UWovD3XOSwQIl6TwmejcEmR9/edit
 
+the dataset to be optimized on is `shade_optimization_data.csv`
+
 Our data features:
 ```
 {
