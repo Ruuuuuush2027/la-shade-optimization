@@ -21,7 +21,7 @@
    2. https://oehha.ca.gov/calenviroscreen/download-data
 8. Tree Canopy Coverage
    1. Tree_Canopy_Coverage.geojson
-   2. https://lacounty.maps.arcgis.com/home/item.html?id=87ed4ed088f14b07be2dcff51500f68f
+   2. https://data.lacounty.gov/datasets/lacounty::tree-canopy-coverage/about
 9. Urban Heat Island (UHI)
    1. uhi_la.geojson
    2. https://calepa.ca.gov/climate/urban-heat-island-index-for-california/

@@ -385,7 +385,7 @@ Urban Heat Island (UHI) intensity data showing elevated temperature areas by cen
 
 ## 13. vacant_trees_park.geojson
 
-Vacant tree planting site locations in LA parks (12,261 sites).
+Vacant tree planting site locations in LA parks (12,261 sites). Where one can and plan to plant trees
 
 ```json
 {
@@ -411,7 +411,7 @@ Vacant tree planting site locations in LA parks (12,261 sites).
 
 ## 14. vacant_trees_street.geojson
 
-Vacant tree planting site locations along LA streets (large file >50MB with many thousands of sites).
+Vacant tree planting site locations along LA streets (large file >50MB with many thousands of sites). Where one can and plan to plant trees
 
 ```json
 {
