@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-Explorative EDA + Cleaning + Spatial Imputation (Haversine) + Feature Engineering
---------------------------------------------------------------------------------
+Explorative EDA + Cleaning + Spatial Imputation (Haversine) + Robust Env Features + Engineering
+----------------------------------------------------------------------------------------------
 Auto-run version (no CLI). It will:
 
 1) Load CSV from DATA_PATH.
-2) EDA: overview, missingness, distributions, correlation heatmap, pairplot, outlier counts.
-3) Spatially impute all `lashade_*` columns using geographic nearest neighbors (BallTree, haversine).
+2) EDA: overview, missingness bar, distributions, correlation heatmap, pairplot, outlier counts.
+3) Spatially impute all `lashade_*` columns using BallTree(haversine) by lat/lon.
 4) Drop only non-lashade columns with > MISSING_THRESH missingness.
 5) Impute remaining NaNs (numeric median, categorical mode).
 6) Engineer features:
    - canopy_gap
    - canopy_percent_of_goal
-   - env_heat_composite
    - avg_transport_access
+   - env_exposure_index (robust "heat-like" proxy using canopy, PM2.5, and impervious ratio if available)
 7) Prune highly collinear numeric columns (|r| > 0.95), while protecting engineered features.
 8) Save cleaned dataset, plots, and logs to OUTPUT_DIR.
 
@@ -220,19 +220,73 @@ def main():
         df["canopy_percent_of_goal"] = df["lashade_treecanopy"] / (df["lashade_tc_goal"] + 1e-6)
         engineered += ["canopy_gap", "canopy_percent_of_goal"]
 
-    if {"urban_heat_idx", "pm25", "tree_percent_w"}.issubset(df.columns):
-        df["env_heat_composite"] = (
-            df["urban_heat_idx"].rank(pct=True) * 0.5
-            + df["pm25"].rank(pct=True) * 0.3
-            - df["tree_percent_w"].rank(pct=True) * 0.2
-        )
-        engineered.append("env_heat_composite")
-
-    if {"dist_to_busstop_1", "dist_to_metrostop_1", "dist_to_vacant_park_1"}.issubset(df.columns):
-        df["avg_transport_access"] = df[[
-            "dist_to_busstop_1", "dist_to_metrostop_1", "dist_to_vacant_park_1"
-        ]].mean(axis=1)
+    # Composite access metric if inputs exist (may be partially dropped)
+    access_candidates = [c for c in ["dist_to_busstop_1", "dist_to_metrostop_1", "dist_to_vacant_park_1"] if c in df.columns]
+    if len(access_candidates) >= 2:
+        df["avg_transport_access"] = df[access_candidates].mean(axis=1)
         engineered.append("avg_transport_access")
+
+    # ---- Robust Environmental Exposure (Category B) ----
+    # env_exposure_index = 0.6*(1 - tree_percent_w_norm) + 0.4*(pm25_norm)
+    # If impervious proxy available: 0.5*(1 - tree_norm) + 0.3*(pm25_norm) + 0.2*(impervious_norm)
+
+    def minmax_01(series: pd.Series) -> pd.Series:
+        s = series.astype(float)
+        rng = s.max() - s.min()
+        if pd.isna(rng) or rng == 0:
+            return pd.Series(0.0, index=s.index)
+        return (s - s.min()) / rng
+
+    have_tree = "tree_percent_w" in df.columns
+    have_pm25 = "pm25" in df.columns
+
+    # choose ring with most availability (bld/tot)
+    ring_candidates = [
+        ("lashade_bld1500", "lashade_tot1500"),
+        ("lashade_bld1200", "lashade_tot1200"),
+        ("lashade_bld1800", "lashade_tot1800"),
+    ]
+    imp_num, imp_den = None, None
+    for num_col, den_col in ring_candidates:
+        if num_col in df.columns and den_col in df.columns:
+            imp_num, imp_den = num_col, den_col
+            break
+
+    if have_tree:
+        df["tree_percent_w_norm"] = minmax_01(df["tree_percent_w"])
+    else:
+        df["tree_percent_w_norm"] = 0.0
+
+    if have_pm25:
+        df["pm25_norm"] = minmax_01(df["pm25"])
+    else:
+        df["pm25_norm"] = 0.0
+
+    used_impervious = False
+    if imp_num and imp_den:
+        df["impervious_ratio"] = df[imp_num] / (df[imp_den] + 1e-6)
+        df["impervious_ratio_norm"] = minmax_01(df["impervious_ratio"])
+        df["env_exposure_index"] = (
+            0.5 * (1 - df["tree_percent_w_norm"])
+            + 0.3 * df["pm25_norm"]
+            + 0.2 * df["impervious_ratio_norm"]
+        )
+        engineered += ["env_exposure_index", "tree_percent_w_norm", "pm25_norm", "impervious_ratio", "impervious_ratio_norm"]
+        used_impervious = True
+    else:
+        df["env_exposure_index"] = (
+            0.6 * (1 - df["tree_percent_w_norm"])
+            + 0.4 * df["pm25_norm"]
+        )
+        engineered += ["env_exposure_index", "tree_percent_w_norm", "pm25_norm"]
+
+    # QA plot for env exposure
+    plt.figure(figsize=(6,4))
+    sns.histplot(df["env_exposure_index"], kde=True)
+    plt.title("Distribution: env_exposure_index")
+    plt.tight_layout()
+    plt.savefig(OUTPUT_DIR / "env_exposure_index_hist.png")
+    plt.close()
 
     if engineered:
         print(f"\n✅ Added engineered features: {engineered}")
@@ -243,16 +297,18 @@ def main():
         print("\n⚠️ No engineered features were added (missing required source columns).")
 
     # ---- Prune highly collinear numeric features (|r| > 0.95), but protect engineered ----
-    protect_cols = set(["canopy_gap", "canopy_percent_of_goal", "env_heat_composite", "avg_transport_access"])
+    protect_cols = set([
+        "canopy_gap", "canopy_percent_of_goal", "avg_transport_access",
+        "env_exposure_index", "tree_percent_w_norm", "pm25_norm",
+        "impervious_ratio", "impervious_ratio_norm"
+    ])
     num = df.select_dtypes(include=[np.number])
     to_drop_corr = []
     if not num.empty:
         corr_abs = num.corr().abs()
         upper = corr_abs.where(np.triu(np.ones(corr_abs.shape), k=1).astype(bool))
-        # Only consider columns NOT in protect_cols
         candidates = [c for c in upper.columns if c not in protect_cols]
         for c in candidates:
-            # also avoid dropping any protected row labels
             mask_series = upper[c].drop(labels=list(protect_cols & set(upper.index)), errors="ignore")
             if (mask_series > 0.95).any():
                 to_drop_corr.append(c)
@@ -268,9 +324,17 @@ def main():
         if feat in df.columns:
             print(f"   - {feat} (non-null count: {df[feat].notna().sum()})")
 
-    preview_cols = ["latitude","longitude"] + [c for c in engineered if c in df.columns]
-    if preview_cols:
-        df[preview_cols].head(20).to_csv(OUTPUT_DIR / "engineered_preview.csv", index=False)
+    priority_cols = [
+        "latitude", "longitude",
+        "canopy_gap", "canopy_percent_of_goal",
+        "tree_percent_w", "pm25",
+        "env_exposure_index",
+        "avg_transport_access",
+        "lashade_pctpov", "lashade_health_nor", "lashade_seniorperc", "lashade_pctpoc"
+    ]
+    existing_priority_cols = [c for c in priority_cols if c in df.columns]
+    if existing_priority_cols:
+        df[existing_priority_cols].head(100).to_csv(OUTPUT_DIR / "priority_preview.csv", index=False)
 
     # ---- Save cleaned outputs ----
     out_clean = OUTPUT_DIR / "data_cleaned.csv"
@@ -286,14 +350,11 @@ def main():
             f.write("Dropped due to high correlation:\n")
             for c in to_drop_corr:
                 f.write(f"- {c}\n")
-        # We already printed missingness-dropped cols above; optionally record them too:
-        # (Recompute last drop list if desired)
-        # ...
 
     print("\n--- DONE ---")
     print(f"💾 Cleaned dataset: {out_clean}")
     print(f"🖼️ Visualizations saved in: {OUTPUT_DIR.resolve()}")
-    print(f"📝 Logs saved: engineered_features.txt, final_feature_list.txt, dropped_columns.txt")
+    print("📝 Logs saved: engineered_features.txt, final_feature_list.txt, dropped_columns.txt")
 
 if __name__ == "__main__":
     main()
