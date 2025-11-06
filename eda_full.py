@@ -158,11 +158,17 @@ def main():
     df = pd.read_csv(DATA_PATH)
     print(f"✅ Loaded dataset: {df.shape[0]} rows × {df.shape[1]} cols")
 
+    # ---- Set pandas display options to show all columns/rows ----
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', None)
+
     # ---- Overview ----
     print("\n=== DATA OVERVIEW ===")
     print(df.info())
-    print("\n=== SUMMARY STATS (numeric head) ===")
-    print(df.select_dtypes(include=[np.number]).describe().T.head(15))
+    print("\n=== SUMMARY STATS (all numeric features) ===")
+    print(df.select_dtypes(include=[np.number]).describe().T)
 
     # ---- Missingness (before) ----
     save_missingness_bar(df, OUTPUT_DIR, name_suffix="_before_imputation")
