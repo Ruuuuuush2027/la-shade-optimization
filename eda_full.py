@@ -158,11 +158,11 @@ def main():
     df = pd.read_csv(DATA_PATH)
     print(f"✅ Loaded dataset: {df.shape[0]} rows × {df.shape[1]} cols")
 
-    # ---- Set pandas display options to show all columns/rows ----
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.max_rows', None)
-    pd.set_option('display.width', None)
-    pd.set_option('display.max_colwidth', None)
+    # # ---- Set pandas display options to show all columns/rows ----
+    # pd.set_option('display.max_columns', None)
+    # pd.set_option('display.max_rows', None)
+    # pd.set_option('display.width', None)
+    # pd.set_option('display.max_colwidth', None)
 
     # ---- Overview ----
     print("\n=== DATA OVERVIEW ===")

@@ -1,10 +1,11 @@
 # la-shade-optimization
 
-proposal doc: https://docs.google.com/document/d/13zeRmjD0UWovD3XOSwQIl6TwmejcEmR9/edit
+### Important Docs
+1. proposal doc: https://docs.google.com/document/d/13zeRmjD0UWovD3XOSwQIl6TwmejcEmR9/edit
+2. the raw csv dataset gathered from 14 features is `shade_optimization_data.csv`
+3. new cleaned csv dataset is in `shade_optimization_data_cleaned.csv`
 
-the dataset to be optimized on is `shade_optimization_data.csv`
-
-Our data features:
+### Data Features
 ```
 {
     # D1: Cooling/Heating Centers (2 features)
