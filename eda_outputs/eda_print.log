@@ -1,0 +1,158 @@
+✅ Loaded dataset: 2650 rows × 84 cols
+
+=== DATA OVERVIEW ===
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 2650 entries, 0 to 2649
+Data columns (total 84 columns):
+ #   Column                               Non-Null Count  Dtype  
+---  ------                               --------------  -----  
+ 0   latitude                             2650 non-null   float64
+ 1   longitude                            2650 non-null   float64
+ 2   dist_to_ac_1                         2650 non-null   float64
+ 3   dist_to_ac_3                         2650 non-null   float64
+ 4   dist_to_hydro_1                      2650 non-null   float64
+ 5   dist_to_hydro_3                      2650 non-null   float64
+ 6   install_year_hydro_3                 2650 non-null   int64  
+ 7   dist_to_busline_1                    2650 non-null   float64
+ 8   dist_to_busline_3                    2650 non-null   float64
+ 9   dist_to_busstop_1                    2650 non-null   float64
+ 10  dist_to_busstop_3                    2650 non-null   float64
+ 11  dist_to_metroline_1                  2650 non-null   float64
+ 12  dist_to_metroline_3                  2650 non-null   float64
+ 13  dist_to_metrostop_1                  2650 non-null   float64
+ 14  dist_to_metrostop_3                  2650 non-null   float64
+ 15  lashade_ua_pop                       571 non-null    float64
+ 16  lashade_cbg_pop                      571 non-null    float64
+ 17  lashade_acs_pop                      571 non-null    float64
+ 18  lashade_biome                        571 non-null    object 
+ 19  lashade_tc_goal                      571 non-null    float64
+ 20  lashade_treecanopy                   571 non-null    float64
+ 21  lashade_tc_gap                       571 non-null    float64
+ 22  lashade_pctpoc                       571 non-null    float64
+ 23  lashade_pctpov                       571 non-null    float64
+ 24  lashade_unemplrate                   571 non-null    float64
+ 25  lashade_dep_ratio                    571 non-null    float64
+ 26  lashade_dep_perc                     571 non-null    float64
+ 27  lashade_linguistic                   571 non-null    float64
+ 28  lashade_health_nor                   571 non-null    float64
+ 29  lashade_temp_diff                    571 non-null    float64
+ 30  lashade_tes                          571 non-null    float64
+ 31  lashade_holc_grade                   258 non-null    object 
+ 32  lashade_child_perc                   571 non-null    float64
+ 33  lashade_seniorperc                   571 non-null    float64
+ 34  lashade_ej_disadva                   248 non-null    object 
+ 35  lashade_rank                         571 non-null    float64
+ 36  lashade_rankgrpsz                    571 non-null    float64
+ 37  lashade_bld1200                      571 non-null    float64
+ 38  lashade_veg1200                      571 non-null    float64
+ 39  lashade_bld1500                      571 non-null    float64
+ 40  lashade_veg1500                      571 non-null    float64
+ 41  lashade_bld1800                      571 non-null    float64
+ 42  lashade_veg1800                      571 non-null    float64
+ 43  lashade_tot1200                      571 non-null    float64
+ 44  lashade_tot1500                      571 non-null    float64
+ 45  lashade_tot1800                      571 non-null    float64
+ 46  dist_to_venue1                       2650 non-null   float64
+ 47  closest_venue_sport                  2650 non-null   object 
+ 48  dist_to_venue3                       2650 non-null   float64
+ 49  cva_population                       1695 non-null   float64
+ 50  cva_children                         1695 non-null   float64
+ 51  cva_older_adults                     1695 non-null   float64
+ 52  cva_older_adults_living_alone        1695 non-null   float64
+ 53  cva_limited_english                  1695 non-null   float64
+ 54  cva_no_high_school_diploma           1695 non-null   float64
+ 55  cva_female                           1695 non-null   float64
+ 56  cva_female_householder               1695 non-null   float64
+ 57  cva_disability                       1695 non-null   float64
+ 58  cva_no_health_insurance              1695 non-null   float64
+ 59  cva_living_in_group_quarters         1695 non-null   float64
+ 60  cva_mobile_homes                     1695 non-null   float64
+ 61  cva_rent_burden                      1695 non-null   float64
+ 62  cva_renters                          1695 non-null   float64
+ 63  cva_median_income                    1695 non-null   float64
+ 64  cva_poverty                          1695 non-null   float64
+ 65  cva_households_without_vehicle_acce  1695 non-null   float64
+ 66  cva_outdoor_workers                  1695 non-null   float64
+ 67  cva_unemployed                       1695 non-null   float64
+ 68  cva_foreign_born                     1695 non-null   float64
+ 69  cva_no_internet_subscription         1695 non-null   float64
+ 70  cva_voter_turnout_rate               1695 non-null   float64
+ 71  cva_sovi_score                       1695 non-null   float64
+ 72  cva_asthma                           1695 non-null   float64
+ 73  cva_cardiovascular_disease           1695 non-null   float64
+ 74  cva_transit_access                   1695 non-null   float64
+ 75  pm25                                 1170 non-null   float64
+ 76  pm25_percentile                      1170 non-null   float64
+ 77  tree_percent_w                       1752 non-null   float64
+ 78  urban_heat_idx                       610 non-null    float64
+ 79  urban_heat_idx_percentile            613 non-null    float64
+ 80  dist_to_vacant_park_1                2650 non-null   float64
+ 81  dist_to_vacant_park_3                2650 non-null   float64
+ 82  dist_to_vacant_street_1              2650 non-null   float64
+ 83  dist_to_vacant_street_3              2650 non-null   float64
+dtypes: float64(79), int64(1), object(4)
+memory usage: 1.7+ MB
+None
+
+=== SUMMARY STATS (numeric head) ===
+                       count         mean  ...          75%          max
+latitude              2650.0    34.264448  ...    34.546671    34.828895
+longitude             2650.0  -118.306342  ...  -117.977944  -117.662683
+dist_to_ac_1          2650.0    32.022960  ...    46.769901    87.306694
+dist_to_ac_3          2650.0    33.975342  ...    48.433694    89.310325
+dist_to_hydro_1       2650.0    31.847408  ...    47.035387    89.467834
+dist_to_hydro_3       2650.0    33.269459  ...    48.259264    90.671549
+install_year_hydro_3  2650.0  2020.826792  ...  2021.000000  2079.000000
+dist_to_busline_1     2650.0    23.636201  ...    37.424183    82.205754
+dist_to_busline_3     2650.0    24.315805  ...    38.044282    82.205754
+dist_to_busstop_1     2650.0    23.132615  ...    37.368581    82.202991
+dist_to_busstop_3     2650.0    23.212781  ...    37.457905    82.275630
+dist_to_metroline_1   2650.0    33.315094  ...    49.970739    89.924955
+dist_to_metroline_3   2650.0    35.282357  ...    51.589849    89.925872
+dist_to_metrostop_1   2650.0    33.481363  ...    50.117696    90.210507
+dist_to_metrostop_3   2650.0    34.947932  ...    51.874550    94.023167
+
+[15 rows x 8 columns]
+
+🌳 Spatially imputing 31 LA Shade columns using haversine k=1 ...
+
+Top missingness AFTER spatial impute (first 15 cols):
+urban_heat_idx                         0.769811
+urban_heat_idx_percentile              0.768679
+pm25                                   0.558491
+pm25_percentile                        0.558491
+cva_poverty                            0.360377
+cva_households_without_vehicle_acce    0.360377
+cva_voter_turnout_rate                 0.360377
+cva_sovi_score                         0.360377
+cva_female_householder                 0.360377
+cva_disability                         0.360377
+cva_outdoor_workers                    0.360377
+cva_unemployed                         0.360377
+cva_foreign_born                       0.360377
+cva_no_internet_subscription           0.360377
+cva_rent_burden                        0.360377
+dtype: float64
+
+📉 Dropping 2 non-LA Shade columns (> 60.0% missing):
+['urban_heat_idx', 'urban_heat_idx_percentile']
+
+✅ Added engineered features: ['canopy_gap', 'canopy_percent_of_goal', 'avg_transport_access', 'env_exposure_index', 'tree_percent_w_norm', 'pm25_norm', 'impervious_ratio', 'impervious_ratio_norm']
+
+📉 Dropping 19 highly correlated columns (>0.95):
+['dist_to_ac_3', 'dist_to_hydro_1', 'dist_to_hydro_3', 'dist_to_busline_3', 'dist_to_busstop_1', 'dist_to_busstop_3', 'dist_to_metroline_3', 'dist_to_metrostop_1', 'dist_to_metrostop_3', 'lashade_veg1500', 'lashade_tot1200', 'lashade_tot1500', 'dist_to_venue1', 'dist_to_venue3', 'pm25_percentile', 'dist_to_vacant_park_1', 'dist_to_vacant_park_3', 'dist_to_vacant_street_1', 'dist_to_vacant_street_3']
+
+🔎 Engineered features now in dataframe:
+   - canopy_gap (non-null count: 2650)
+   - canopy_percent_of_goal (non-null count: 2650)
+   - avg_transport_access (non-null count: 2650)
+   - env_exposure_index (non-null count: 2650)
+   - tree_percent_w_norm (non-null count: 2650)
+   - pm25_norm (non-null count: 2650)
+   - impervious_ratio (non-null count: 2650)
+   - impervious_ratio_norm (non-null count: 2650)
+
+--- DONE ---
+💾 Cleaned dataset: eda_outputs_test/data_cleaned.csv
+🖼️ Visualizations saved in: /mnt/c/Users/maohe/Desktop/files/WorkSpace/Projects/csci461&444/461 group proj/eda_outputs_test
+📝 Logs saved: engineered_features.txt, final_feature_list.txt, dropped_columns.txt

@@ -24,6 +24,8 @@ Dependencies:
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend for headless environments
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.neighbors import BallTree
@@ -31,8 +33,8 @@ from sklearn.neighbors import BallTree
 # =========================
 # CONFIG (EDIT THESE PATHS)
 # =========================
-DATA_PATH = "/Users/jy/Documents/USC/csci461/la-shade-optimization/shade_optimization_data.csv"
-OUTPUT_DIR = Path("/Users/jy/Documents/USC/csci461/la-shade-optimization/eda_outputs")
+DATA_PATH = "./shade_optimization_data.csv"
+OUTPUT_DIR = Path("./eda_outputs_test")
 MISSING_THRESH = 0.60     # drop non-lashade columns if >60% missing
 K_NEIGHBORS = 1           # 1 = strict nearest; use 3–5 for local average fill
 
