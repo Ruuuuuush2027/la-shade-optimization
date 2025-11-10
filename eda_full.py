@@ -56,7 +56,7 @@ def plot_correlation_heatmap(df: pd.DataFrame, outdir: Path, name: str = "correl
     if len(num_cols) < 2:
         return
     corr = df[num_cols].corr()
-    plt.figure(figsize=(12, 10))
+    plt.figure(figsize=(20, 16), dpi=200)
     sns.heatmap(corr, cmap="coolwarm", center=0, annot=False)
     plt.title("Correlation Heatmap (Numeric Features)")
     plt.tight_layout()
