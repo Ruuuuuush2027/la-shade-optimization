@@ -1,0 +1,22 @@
+{
+  "timestamp": "20251109_014409",
+  "data_shape": [
+    2650,
+    71
+  ],
+  "reward_weights": {
+    "heat_vulnerability": 0.35,
+    "population_impact": 0.25,
+    "accessibility": 0.15,
+    "equity": 0.15,
+    "coverage_efficiency": 0.1
+  },
+  "optimal_spacing_km": 0.8,
+  "hyperparameters": {
+    "alpha": 0.1,
+    "gamma": 0.95,
+    "epsilon": 0.3,
+    "episodes": 500,
+    "budget": 50
+  }
+}

@@ -1,0 +1,6 @@
+method,total_reward
+Greedy Optimization,34.92553565807543
+Greedy-by-Env-Exposure,33.001329503434995
+Greedy-by-SoVI,31.563574700124818
+Q-Learning (RL),28.82642527660952
+Random,28.312433105454836
