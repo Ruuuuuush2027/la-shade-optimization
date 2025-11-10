@@ -204,8 +204,7 @@ def main():
             df[c] = df[c].fillna(df[c].median())
     for c in cat_cols:
         if df[c].isna().any():
-            mode_val = df[c].mode(dropna=True)
-            df[c] = df[c].fillna(mode_val.iloc[0] if not mode_val.empty else "Unknown")
+            df[c] = df[c].fillna("unknown")
 
     # ---- EDA Visuals ----
     key_cols = [c for c in [
