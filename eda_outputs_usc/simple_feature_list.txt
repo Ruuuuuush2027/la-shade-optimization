@@ -1,0 +1,80 @@
+================================================================================
+ENGINEERED FEATURES LIST
+================================================================================
+
+Total Features: 129
+Original Features: 85
+Engineered Features: 44
+
+HEAT-RELATED (8 features):
+--------------------------------------------------------------------------------
+   temp_severity_norm
+   uhi_norm
+   canopy_gap_norm
+   canopy_pct_of_goal
+   pm25_norm
+   vegetation_deficit
+   veg_deficit_x_uhi
+   canopy_gap_x_pm25
+
+POPULATION-RELATED (9 features):
+--------------------------------------------------------------------------------
+   population_norm
+   vulnerable_population
+   vulnerable_pop_norm
+   olympic_proximity
+   olympic_proximity_norm
+   heat_x_population
+   heat_x_vulnerable
+   population_x_transit_gap
+   olympic_x_population
+
+ACCESSIBILITY-RELATED (12 features):
+--------------------------------------------------------------------------------
+   cooling_distance_norm
+   hydration_distance_norm
+   avg_transit_distance
+   avg_transit_distance_norm
+   transit_access_score
+   transit_access_norm
+   planting_opportunity
+   planting_opportunity_norm
+   avg_infrastructure_distance
+   cva_transit_norm
+   population_x_transit_gap
+   poverty_x_cooling_gap
+
+EQUITY-RELATED (11 features):
+--------------------------------------------------------------------------------
+   sovi_norm
+   poverty_norm
+   env_justice_binary
+   avg_health_vulnerability
+   health_vulnerability_norm
+   education_gap_norm
+   rent_burden_norm
+   limited_english_norm
+   heat_x_poverty
+   heat_x_sovi
+   poverty_x_cooling_gap
+
+SPATIAL-RELATED (4 features):
+--------------------------------------------------------------------------------
+   shade_gap
+   spatial_isolation_km
+   spatial_isolation_norm
+   shade_gap_x_isolation
+
+INTERACTIONS (10 features):
+--------------------------------------------------------------------------------
+   heat_x_population
+   heat_x_poverty
+   heat_x_vulnerable
+   heat_x_sovi
+   population_x_transit_gap
+   poverty_x_cooling_gap
+   veg_deficit_x_uhi
+   canopy_gap_x_pm25
+   olympic_x_population
+   shade_gap_x_isolation
+

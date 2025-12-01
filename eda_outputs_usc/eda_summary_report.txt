@@ -1,0 +1,30 @@
+================================================================================
+USC SHADE OPTIMIZATION DATA - EDA SUMMARY REPORT
+================================================================================
+
+Dataset Shape: 1155 rows × 85 columns
+Memory Usage: 0.96 MB
+
+LAND_SURFACE_TEMP_C ANALYSIS:
+--------------------------------------------------------------------------------
+Missing Values: 682 (59.05%)
+Imputation Method: BallTree Spatial (Haversine)
+After Imputation - Mean: 48.27°C
+After Imputation - Std: 1.38°C
+After Imputation - Range: [42.85, 52.59]°C
+
+TOP 10 FEATURES CORRELATED WITH LAND_SURFACE_TEMP_C:
+--------------------------------------------------------------------------------
+ 1. lashade_temp_diff                         0.6738
+ 2. lashade_veg1500                          -0.5158
+ 3. lashade_veg1200                          -0.5092
+ 4. lashade_tot1200                          -0.5071
+ 5. dist_to_ac_3                             -0.4887
+ 6. lashade_treecanopy                       -0.4855
+ 7. lashade_tot1500                          -0.4814
+ 8. cva_no_high_school_diploma                0.4541
+ 9. lashade_pctpoc                            0.4111
+10. longitude                                 0.3953
+
+================================================================================
+All visualizations saved in eda_outputs_usc/
