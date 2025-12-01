@@ -12,6 +12,9 @@ Key Changes from Original:
 5. No longer depends on dropped highly correlated features
 """
 
+import argparse
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -28,7 +31,7 @@ class ShadeRewardFunction:
     the engineered env_exposure_index which combines heat + air + impervious.
     """
 
-    def __init__(self, data_df, weights=None, optimal_spacing_km=0.8):
+    def __init__(self, data_df, weights=None, optimal_spacing_km=2.45):
         """
         Initialize the reward function.
 
@@ -420,66 +423,76 @@ class ShadeRewardFunction:
                 'lashade_ej_disadva': features['lashade_ej_disadva']
             }
         }
-
-
 # ============================================================================
 # TESTING AND VALIDATION
 # ============================================================================
 
 if __name__ == "__main__":
-    print("="*70)
-    print("REWARD FUNCTION TESTING")
-    print("="*70)
+    parser = argparse.ArgumentParser(
+        description="Quick sanity check for the shade reward function."
+    )
+    parser.add_argument(
+        "--data-path",
+        default="../shade_optimization_data_cleaned.csv",
+        help="Path to the cleaned dataset CSV.",
+    )
+    parser.add_argument(
+        "--alt-data-path",
+        default="./shade_optimization_data_cleaned.csv",
+        help="Fallback path if --data-path missing.",
+    )
+    parser.add_argument(
+        "--state",
+        type=str,
+        default="100,500,1000",
+        help="Comma-separated list of already-placed shade indices.",
+    )
+    parser.add_argument(
+        "--action",
+        type=int,
+        default=250,
+        help="Index of the new shade to evaluate.",
+    )
+    args = parser.parse_args()
 
-    # Load cleaned data
-    import os
-    data_path = "../shade_optimization_data_cleaned.csv"
+    data_path = args.data_path
+    if not os.path.exists(data_path):
+        data_path = args.alt_data_path
 
     if not os.path.exists(data_path):
-        # Try alternative path
-        data_path = "./shade_optimization_data_cleaned.csv"
+        raise FileNotFoundError(
+            f"Cleaned data not found at {args.data_path} or {args.alt_data_path}. "
+            "Run eda_full.py first."
+        )
 
-    if os.path.exists(data_path):
-        print(f"\n✓ Loading cleaned data from: {data_path}")
-        data = pd.read_csv(data_path)
-        print(f"  Shape: {data.shape}")
+    print("=" * 70)
+    print(f"✓ Loading cleaned data from: {data_path}")
+    data = pd.read_csv(data_path)
+    print(f"  Shape: {data.shape}")
 
-        # Initialize reward function
-        print("\nInitializing reward function...")
-        reward_fn = ShadeRewardFunction(data)
+    reward_fn = ShadeRewardFunction(data)
 
-        # Test reward calculation
-        print("\n" + "="*70)
-        print("TEST REWARD CALCULATION")
-        print("="*70)
+    print("\n" + "=" * 70)
+    print("REWARD FUNCTION SANITY TEST")
+    print("=" * 70)
 
-        state = [100, 500, 1000]  # 3 shades already placed
-        action = 250  # Propose new shade at index 250
+    state = [int(x) for x in args.state.split(',') if x.strip()]
+    action = args.action
 
-        print(f"\nScenario:")
-        print(f"  State: {len(state)} shades at indices {state}")
-        print(f"  Action: Place shade at index {action}")
+    reward = reward_fn.calculate_reward(state, action)
+    breakdown = reward_fn.get_component_breakdown(state, action)
 
-        # Calculate reward
-        reward = reward_fn.calculate_reward(state, action)
-        print(f"\n  → Total Reward: {reward:.4f}")
+    print(f"\nScenario: state={state}, action={action}")
+    print(f"→ Total Reward: {reward:.4f}\n")
 
-        # Get breakdown
-        breakdown = reward_fn.get_component_breakdown(state, action)
+    print("Component Breakdown:")
+    for component, value in breakdown['components'].items():
+        weighted = breakdown['weighted'][component]
+        weight = reward_fn.weights[component]
+        print(f"  {component:25s}: {value:.4f} × {weight:.2f} = {weighted:.4f}")
 
-        print(f"\nComponent Breakdown:")
-        for component, value in breakdown['components'].items():
-            weighted = breakdown['weighted'][component]
-            weight = reward_fn.weights[component]
-            print(f"  {component:25s}: {value:.4f} × {weight:.2f} = {weighted:.4f}")
+    print("\nLocation Details:")
+    for key, value in breakdown['location'].items():
+        print(f"  {key:25s}: {value}")
 
-        print(f"\nLocation Details:")
-        for key, value in breakdown['location'].items():
-            print(f"  {key:25s}: {value}")
-
-        print("\n" + "="*70)
-        print("✓ Reward function test complete!")
-        print("="*70)
-    else:
-        print(f"\n✗ Cleaned data not found at: {data_path}")
-        print("  Please run eda_full.py first to generate cleaned data.")
+    print("\n✓ Reward function test complete!")
