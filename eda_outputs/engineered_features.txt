@@ -1,8 +1,0 @@
-canopy_gap
-canopy_percent_of_goal
-avg_transport_access
-env_exposure_index
-tree_percent_w_norm
-pm25_norm
-impervious_ratio
-impervious_ratio_norm

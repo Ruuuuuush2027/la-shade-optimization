@@ -1,0 +1,80 @@
+{
+  "region": "All",
+  "method": "Approach1_ExpertHeuristic",
+  "k": 10,
+  "placements": [
+    267,
+    191,
+    232,
+    326,
+    304,
+    303,
+    190,
+    587,
+    622,
+    264
+  ],
+  "placement_coordinates": [
+    {
+      "index": 267,
+      "latitude": 34.006784111867006,
+      "longitude": -118.27924916471542
+    },
+    {
+      "index": 191,
+      "latitude": 34.00388950847643,
+      "longitude": -118.28972621070211
+    },
+    {
+      "index": 232,
+      "latitude": 34.00533681017172,
+      "longitude": -118.27924916471542
+    },
+    {
+      "index": 326,
+      "latitude": 34.00967871525758,
+      "longitude": -118.29845708235771
+    },
+    {
+      "index": 304,
+      "latitude": 34.00823141356229,
+      "longitude": -118.2757568160532
+    },
+    {
+      "index": 303,
+      "latitude": 34.00823141356229,
+      "longitude": -118.2775029903843
+    },
+    {
+      "index": 190,
+      "latitude": 34.00388950847643,
+      "longitude": -118.29147238503325
+    },
+    {
+      "index": 587,
+      "latitude": 34.01980982712458,
+      "longitude": -118.27051829305984
+    },
+    {
+      "index": 622,
+      "latitude": 34.02125712881987,
+      "longitude": -118.27051829305984
+    },
+    {
+      "index": 264,
+      "latitude": 34.006784111867006,
+      "longitude": -118.28448768770878
+    }
+  ],
+  "metrics": {
+    "heat_sum": 497.0079283759336,
+    "socio_sum": 27.18,
+    "public_access": 1.9183775847379918,
+    "close_pairs_500m": 9,
+    "olympic_coverage": 0.0,
+    "equity_gini": 0.9283487428531847,
+    "spatial_efficiency": 1.3302746050440126,
+    "population_served": 751964.0
+  },
+  "timestamp": "2025-12-02T16:17:26.579754"
+}

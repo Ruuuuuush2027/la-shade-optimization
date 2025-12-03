@@ -1,0 +1,251 @@
+# Configuration for LA Shade Optimization Experiments
+# Three reward function approaches tested across 3 regions with multiple k-values
+
+experiment:
+  # Geographic regions to test
+  regions:
+    - name: "USC"
+      min_lat: 34.01
+      max_lat: 34.04
+      min_lon: -118.30
+      max_lon: -118.27
+      description: "University Park, Exposition Park area"
+      characteristics: "Mixed residential, university, moderate density"
+      optimal_spacing_km: 0.8
+
+    - name: "Inglewood"
+      min_lat: 33.94
+      max_lat: 34.01
+      min_lon: -118.37
+      max_lon: -118.30
+      description: "Inglewood city including SoFi Stadium"
+      characteristics: "High vulnerability, Olympic venue, residential"
+      optimal_spacing_km: 0.8
+
+    - name: "DTLA"
+      min_lat: 34.04
+      max_lat: 34.07
+      min_lon: -118.26
+      max_lon: -118.23
+      description: "Downtown LA core"
+      characteristics: "Ultra-high density, extreme UHI, commercial/residential"
+      optimal_spacing_km: 0.6
+
+  # Number of shade placements to test
+  k_values: [10, 20, 30, 50]
+
+  # Reward function approaches to compare
+  approaches:
+    - approach1_weighted
+    - approach2_hierarchical
+    - approach3_pareto
+
+  # Baseline methods
+  baselines:
+    - random
+    - greedy_feature
+    - greedy_optimization
+    - kmeans
+    - expert_heuristic
+
+  # Evaluation metrics
+  metrics:
+    - heat_sum
+    - socio_sum
+    - public_access
+    - close_pairs_500m
+    - olympic_coverage
+    - equity_gini
+    - spatial_efficiency
+    - population_served
+
+# Approach 1: Enhanced Weighted Sum Configuration
+approach1_weighted:
+  # Main component weights (must sum to 1.0)
+  weights:
+    heat: 0.30
+    population: 0.25
+    equity: 0.18
+    access: 0.12
+    olympic: 0.10
+    coverage: 0.05
+
+  # Heat component sub-weights
+  heat_weights:
+    temp_severity: 0.40
+    uhi: 0.30
+    pm25: 0.20
+    veg_deficit: 0.10
+
+  # Population component sub-weights
+  population_weights:
+    population: 0.50
+    vulnerable_pop: 0.30
+    transit_access: 0.20
+
+  # Equity component sub-weights
+  equity_weights:
+    sovi: 0.35
+    poverty: 0.25
+    health_vuln: 0.20
+    limited_english: 0.20
+
+  # Access component sub-weights
+  access_weights:
+    cooling: 0.50
+    hydration: 0.30
+    planting: 0.20
+
+  # Olympic component sub-weights
+  olympic_weights:
+    venue_proximity: 0.40
+    event_demand: 0.30
+    afternoon_shade: 0.30
+
+  # Constraints configuration
+  constraints:
+    spatial:
+      hard_minimum_km: 0.5  # 500m absolute minimum
+      default_optimal_km: 0.8
+      region_spacing:
+        DTLA: 0.6
+        USC: 0.8
+        Inglewood: 0.8
+
+    saturation:
+      saturation_radius_km: 0.8
+      applies_to_components: ["heat"]
+
+    shade:
+      # Soft tiered penalty thresholds
+      thresholds:
+        0.25: 1.00  # <25% shade → full reward
+        0.30: 0.95  # 25-30% → 95% reward
+        0.35: 0.85  # 30-35% → 85% reward
+        0.40: 0.70  # 35-40% → 70% reward
+        1.00: 0.50  # >40% → 50% reward
+
+# Approach 2: Multiplicative/Hierarchical Configuration
+approach2_hierarchical:
+  # Stage 1: Hierarchical thresholds (percentiles)
+  thresholds:
+    min_temp_percentile: 70       # Must be in top 30% hottest
+    min_population: 1500          # At least 1500 people
+    max_existing_shade: 0.35      # <35% average shade
+    min_sovi: 0.4                 # SOVI > 0.4 OR poverty > 0.3
+    min_poverty: 0.3
+
+  # Stage 2: Base score weights
+  base_weights:
+    heat: 0.4
+    population: 0.3
+    access: 0.2
+    olympic: 0.1
+
+  # Multiplicative bonuses
+  multipliers:
+    heat_equity_bonus: 0.5        # Up to 1.5x for temp×SOVI intersection
+    olympic_bonus: 0.3            # Up to 1.3x near venues
+
+  # Same constraints as Approach 1
+  constraints:
+    spatial:
+      hard_minimum_km: 0.5
+      default_optimal_km: 0.8
+      region_spacing:
+        DTLA: 0.6
+        USC: 0.8
+        Inglewood: 0.8
+
+    saturation:
+      saturation_radius_km: 0.8
+      applies_to_components: ["heat"]
+
+    shade:
+      thresholds:
+        0.25: 1.00
+        0.30: 0.95
+        0.35: 0.85
+        0.40: 0.70
+        1.00: 0.50
+
+# Approach 3: Multi-Objective Pareto (NSGA-II) Configuration
+approach3_pareto:
+  # NSGA-II algorithm parameters
+  nsga2:
+    population_size: 100
+    generations: 200
+    mutation_rate: 0.15
+    crossover_rate: 0.8
+    crowding_distance_weight: 0.5
+
+  # Objective functions (all maximize except spatial_efficiency which minimizes clustering)
+  objectives:
+    - name: "heat_reduction"
+      direction: "maximize"
+      description: "Sum of temp_severity for selected locations"
+
+    - name: "equity_coverage"
+      direction: "maximize"
+      description: "Sum of SOVI scores covered"
+
+    - name: "olympic_access"
+      direction: "maximize"
+      description: "Sum of venue proximity scores"
+
+    - name: "spatial_efficiency"
+      direction: "maximize"
+      description: "Average pairwise distance (minimize clustering)"
+
+    - name: "population_served"
+      direction: "maximize"
+      description: "Total population within 500m of any shade"
+
+  # Same constraints as Approach 1
+  constraints:
+    spatial:
+      hard_minimum_km: 0.5
+      default_optimal_km: 0.8
+      region_spacing:
+        DTLA: 0.6
+        USC: 0.8
+        Inglewood: 0.8
+
+# Baseline Configuration
+baselines:
+  kmeans:
+    n_init: 10
+    max_iter: 300
+    random_state: 42
+
+  expert_heuristic:
+    # Rule: Within 400m of bus stops in census tracts with poverty >30% and UHI >75th percentile
+    transit_radius_km: 0.4
+    min_poverty: 0.30
+    min_uhi_percentile: 75
+
+# Data paths
+data:
+  main_dataset: "shade_optimization_data_usc_simple_features.csv"
+  output_dir: "new_reward/results/"
+  plots_dir: "new_reward/plots/"
+
+# Random seeds for reproducibility
+random_seeds:
+  data_split: 42
+  rl_training: 123
+  baseline_comparison: 456
+
+# Logging
+logging:
+  level: "INFO"
+  log_file: "new_reward/experiments.log"
+  verbose: true
+
+# Visualization settings
+visualization:
+  figure_size: [12, 8]
+  dpi: 300
+  colormap: "viridis"
+  marker_size: 100
+  save_format: "png"

@@ -1,5 +1,0 @@
-dataset_raw/*
-dataset/*
-.ipynb_checkpoints
-*.job
-*.out
