@@ -19,6 +19,23 @@ import json
 import re
 
 
+def _make_json_serializable(value):
+    """Recursively convert numpy/pandas objects to builtin Python types."""
+    if isinstance(value, dict):
+        return {k: _make_json_serializable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_make_json_serializable(v) for v in value]
+    if isinstance(value, np.ndarray):
+        return [_make_json_serializable(v) for v in value.tolist()]
+    if isinstance(value, (np.integer, np.int32, np.int64, np.uint32, np.uint64)):
+        return int(value)
+    if isinstance(value, (np.floating, np.float32, np.float64)):
+        return float(value)
+    if isinstance(value, (pd.Timestamp, np.datetime64)):
+        return pd.Timestamp(value).isoformat()
+    return value
+
+
 class ShadePlacementVisualizer:
     """
     Comprehensive visualization suite for shade placement results.
@@ -507,11 +524,11 @@ class ShadePlacementVisualizer:
         return short_names.get(metric, metric)
 
     def save_results_json(self,
-                         placements: List[int],
-                         metrics: Dict[str, float],
-                         region: str,
-                         method: str,
-                         k: int):
+                          placements: List[int],
+                          metrics: Dict[str, float],
+                          region: str,
+                          method: str,
+                          k: int):
         """
         Save results to JSON file in organized directory.
 
@@ -522,6 +539,8 @@ class ShadePlacementVisualizer:
             method: Method name
             k: Number of placements
         """
+        clean_placements = [int(idx) for idx in placements]
+
         # Create region-specific subdirectory
         region_dir = self.output_dir / 'region_specific' / region
         region_dir.mkdir(parents=True, exist_ok=True)
@@ -531,14 +550,14 @@ class ShadePlacementVisualizer:
             'region': region,
             'method': method,
             'k': k,
-            'placements': placements,
+            'placements': clean_placements,
             'placement_coordinates': [
                 {
                     'index': idx,
                     'latitude': float(self.data.loc[idx, 'latitude']),
                     'longitude': float(self.data.loc[idx, 'longitude'])
                 }
-                for idx in placements
+                for idx in clean_placements
             ],
             'metrics': metrics,
             'timestamp': pd.Timestamp.now().isoformat()
@@ -549,7 +568,7 @@ class ShadePlacementVisualizer:
         filepath = region_dir / filename
 
         with open(filepath, 'w') as f:
-            json.dump(result, f, indent=2)
+            json.dump(_make_json_serializable(result), f, indent=2)
 
         print(f"✓ Saved results JSON: {filepath}")
 
