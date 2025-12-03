@@ -93,12 +93,22 @@ class EnhancedWeightedSumReward(BaseRewardFunction):
         # Get features for this location
         features = self.get_features(action_idx)
 
-        # Calculate each component
-        r_heat = self.heat_comp.calculate(features, self.stats)
-        r_pop = self.pop_comp.calculate(features, self.stats)
-        r_equity = self.equity_comp.calculate(features, self.stats)
-        r_access = self.access_comp.calculate(features, self.stats)
-        r_olympic = self.olympic_comp.calculate(features, self.stats)
+        # Calculate each component (cached per location)
+        r_heat = self._get_cached_value(
+            'heat', action_idx, lambda: self.heat_comp.calculate(features, self.stats)
+        )
+        r_pop = self._get_cached_value(
+            'population', action_idx, lambda: self.pop_comp.calculate(features, self.stats)
+        )
+        r_equity = self._get_cached_value(
+            'equity', action_idx, lambda: self.equity_comp.calculate(features, self.stats)
+        )
+        r_access = self._get_cached_value(
+            'access', action_idx, lambda: self.access_comp.calculate(features, self.stats)
+        )
+        r_olympic = self._get_cached_value(
+            'olympic', action_idx, lambda: self.olympic_comp.calculate(features, self.stats)
+        )
 
         # Coverage efficiency (state-dependent)
         min_dist = self.min_distance_to_state(state, action_idx)
@@ -159,11 +169,21 @@ class EnhancedWeightedSumReward(BaseRewardFunction):
 
         # Calculate components
         components = {
-            'heat': self.heat_comp.calculate(features, self.stats),
-            'population': self.pop_comp.calculate(features, self.stats),
-            'equity': self.equity_comp.calculate(features, self.stats),
-            'access': self.access_comp.calculate(features, self.stats),
-            'olympic': self.olympic_comp.calculate(features, self.stats)
+            'heat': self._get_cached_value(
+                'heat', action_idx, lambda: self.heat_comp.calculate(features, self.stats)
+            ),
+            'population': self._get_cached_value(
+                'population', action_idx, lambda: self.pop_comp.calculate(features, self.stats)
+            ),
+            'equity': self._get_cached_value(
+                'equity', action_idx, lambda: self.equity_comp.calculate(features, self.stats)
+            ),
+            'access': self._get_cached_value(
+                'access', action_idx, lambda: self.access_comp.calculate(features, self.stats)
+            ),
+            'olympic': self._get_cached_value(
+                'olympic', action_idx, lambda: self.olympic_comp.calculate(features, self.stats)
+            )
         }
 
         # Coverage

@@ -192,11 +192,19 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
 
         # Stage 2: Calculate reward for eligible location
 
-        # Calculate base components
-        r_heat = self.heat_comp.calculate(features, self.stats)
-        r_pop = self.pop_comp.calculate(features, self.stats)
-        r_access = self.access_comp.calculate(features, self.stats)
-        r_olympic = self.olympic_comp.calculate(features, self.stats)
+        # Calculate base components (cached)
+        r_heat = self._get_cached_value(
+            'heat', action_idx, lambda: self.heat_comp.calculate(features, self.stats)
+        )
+        r_pop = self._get_cached_value(
+            'population', action_idx, lambda: self.pop_comp.calculate(features, self.stats)
+        )
+        r_access = self._get_cached_value(
+            'access', action_idx, lambda: self.access_comp.calculate(features, self.stats)
+        )
+        r_olympic = self._get_cached_value(
+            'olympic', action_idx, lambda: self.olympic_comp.calculate(features, self.stats)
+        )
 
         # Base score (weighted sum of components)
         base_score = (
@@ -208,7 +216,9 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
 
         # Multiplicative Bonus 1: Heat-Equity Intersection
         # Amplifies locations that are BOTH hot AND vulnerable
-        r_equity = self.equity_comp.calculate(features, self.stats)
+        r_equity = self._get_cached_value(
+            'equity', action_idx, lambda: self.equity_comp.calculate(features, self.stats)
+        )
 
         # Normalize temp to [0, 1]
         temp_norm = self.normalize(
@@ -289,11 +299,21 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
 
         # Calculate components
         components = {
-            'heat': self.heat_comp.calculate(features, self.stats),
-            'population': self.pop_comp.calculate(features, self.stats),
-            'equity': self.equity_comp.calculate(features, self.stats),
-            'access': self.access_comp.calculate(features, self.stats),
-            'olympic': self.olympic_comp.calculate(features, self.stats)
+            'heat': self._get_cached_value(
+                'heat', action_idx, lambda: self.heat_comp.calculate(features, self.stats)
+            ),
+            'population': self._get_cached_value(
+                'population', action_idx, lambda: self.pop_comp.calculate(features, self.stats)
+            ),
+            'equity': self._get_cached_value(
+                'equity', action_idx, lambda: self.equity_comp.calculate(features, self.stats)
+            ),
+            'access': self._get_cached_value(
+                'access', action_idx, lambda: self.access_comp.calculate(features, self.stats)
+            ),
+            'olympic': self._get_cached_value(
+                'olympic', action_idx, lambda: self.olympic_comp.calculate(features, self.stats)
+            )
         }
 
         # Weighted contributions (base score)

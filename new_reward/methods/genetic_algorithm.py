@@ -2,7 +2,9 @@
 
 import numpy as np
 import random
+import time
 from typing import List, Tuple
+from concurrent.futures import ThreadPoolExecutor
 
 
 def genetic_algorithm_optimization(reward_function,
@@ -12,7 +14,8 @@ def genetic_algorithm_optimization(reward_function,
                                    mutation_rate: float = 0.15,
                                    crossover_rate: float = 0.8,
                                    tournament_size: int = 5,
-                                   verbose: bool = False) -> List[int]:
+                                   verbose: bool = False,
+                                   num_workers: int = 12) -> List[int]:
     """
     Genetic Algorithm for shade placement optimization.
 
@@ -30,7 +33,8 @@ def genetic_algorithm_optimization(reward_function,
         Best solution found (list of indices)
     """
     if verbose:
-        print(f"  Running Genetic Algorithm (k={k}, pop={population_size}, gen={generations})...")
+        print(f"  Running Genetic Algorithm (k={k}, pop={population_size}, gen={generations}, "
+              f"workers={num_workers})...")
 
     data = reward_function.data
     valid_indices = data.index.tolist()
@@ -52,9 +56,17 @@ def genetic_algorithm_optimization(reward_function,
     best_solution = None
     best_fitness = -np.inf
 
+    start_time = time.time()
+
+    def eval_population(pop):
+        if num_workers <= 1:
+            return [evaluate_fitness(ind, reward_function) for ind in pop]
+        with ThreadPoolExecutor(max_workers=num_workers) as executor:
+            return list(executor.map(lambda ind: evaluate_fitness(ind, reward_function), pop))
+
     for generation in range(generations):
-        # Evaluate fitness
-        fitness_scores = [evaluate_fitness(ind, reward_function) for ind in population]
+        # Evaluate fitness (optionally in parallel)
+        fitness_scores = eval_population(population)
 
         # Update best
         max_fitness_idx = np.argmax(fitness_scores)
@@ -86,8 +98,11 @@ def genetic_algorithm_optimization(reward_function,
         # Ensure population size
         population = next_generation[:population_size]
 
-        if verbose and (generation + 1) % max(1, generations // 10) == 0:
-            print(f"    Generation {generation+1}/{generations}: Best fitness={best_fitness:.3f}")
+        if verbose:
+            elapsed = time.time() - start_time
+            print(f"    Generation {generation+1}/{generations}: "
+                  f"Best fitness={best_fitness:.3f} "
+                  f"(elapsed {elapsed/60:.1f} min)")
 
     if verbose:
         print(f"  ✓ GA complete. Best fitness: {best_fitness:.3f}")

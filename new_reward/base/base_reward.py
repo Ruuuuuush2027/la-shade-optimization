@@ -8,7 +8,7 @@ must implement, along with shared utility methods.
 from abc import ABC, abstractmethod
 import numpy as np
 import pandas as pd
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Callable
 
 
 class BaseRewardFunction(ABC):
@@ -29,6 +29,7 @@ class BaseRewardFunction(ABC):
         """
         self.data = data_df.reset_index(drop=True)
         self.config = config or {}
+        self._component_cache: Dict[str, Dict[int, float]] = {}
 
         # Validate required columns
         self._validate_data()
@@ -103,6 +104,26 @@ class BaseRewardFunction(ABC):
             Feature values as pandas Series
         """
         return self.data.iloc[idx]
+
+    def _get_cached_value(self,
+                          cache_key: str,
+                          idx: int,
+                          compute_fn: Callable[[], float]) -> float:
+        """
+        Retrieve a cached component score or compute/store it lazily.
+
+        Args:
+            cache_key: Name of the component (e.g., 'heat')
+            idx: Data index
+            compute_fn: Function that computes the value when not cached
+
+        Returns:
+            Cached or newly computed value
+        """
+        cache = self._component_cache.setdefault(cache_key, {})
+        if idx not in cache:
+            cache[idx] = compute_fn()
+        return cache[idx]
 
     def haversine_distance(self,
                           lat1: float, lon1: float,
