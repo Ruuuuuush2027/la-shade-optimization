@@ -1,0 +1,222 @@
+✅ Loaded dataset: 2650 rows × 84 cols
+
+=== DATA OVERVIEW ===
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 2650 entries, 0 to 2649
+Data columns (total 84 columns):
+ #   Column                               Non-Null Count  Dtype  
+---  ------                               --------------  -----  
+ 0   latitude                             2650 non-null   float64
+ 1   longitude                            2650 non-null   float64
+ 2   dist_to_ac_1                         2650 non-null   float64
+ 3   dist_to_ac_3                         2650 non-null   float64
+ 4   dist_to_hydro_1                      2650 non-null   float64
+ 5   dist_to_hydro_3                      2650 non-null   float64
+ 6   install_year_hydro_3                 2650 non-null   int64  
+ 7   dist_to_busline_1                    2650 non-null   float64
+ 8   dist_to_busline_3                    2650 non-null   float64
+ 9   dist_to_busstop_1                    2650 non-null   float64
+ 10  dist_to_busstop_3                    2650 non-null   float64
+ 11  dist_to_metroline_1                  2650 non-null   float64
+ 12  dist_to_metroline_3                  2650 non-null   float64
+ 13  dist_to_metrostop_1                  2650 non-null   float64
+ 14  dist_to_metrostop_3                  2650 non-null   float64
+ 15  lashade_ua_pop                       571 non-null    float64
+ 16  lashade_cbg_pop                      571 non-null    float64
+ 17  lashade_acs_pop                      571 non-null    float64
+ 18  lashade_biome                        571 non-null    object 
+ 19  lashade_tc_goal                      571 non-null    float64
+ 20  lashade_treecanopy                   571 non-null    float64
+ 21  lashade_tc_gap                       571 non-null    float64
+ 22  lashade_pctpoc                       571 non-null    float64
+ 23  lashade_pctpov                       571 non-null    float64
+ 24  lashade_unemplrate                   571 non-null    float64
+ 25  lashade_dep_ratio                    571 non-null    float64
+ 26  lashade_dep_perc                     571 non-null    float64
+ 27  lashade_linguistic                   571 non-null    float64
+ 28  lashade_health_nor                   571 non-null    float64
+ 29  lashade_temp_diff                    571 non-null    float64
+ 30  lashade_tes                          571 non-null    float64
+ 31  lashade_holc_grade                   258 non-null    object 
+ 32  lashade_child_perc                   571 non-null    float64
+ 33  lashade_seniorperc                   571 non-null    float64
+ 34  lashade_ej_disadva                   248 non-null    object 
+ 35  lashade_rank                         571 non-null    float64
+ 36  lashade_rankgrpsz                    571 non-null    float64
+ 37  lashade_bld1200                      571 non-null    float64
+ 38  lashade_veg1200                      571 non-null    float64
+ 39  lashade_bld1500                      571 non-null    float64
+ 40  lashade_veg1500                      571 non-null    float64
+ 41  lashade_bld1800                      571 non-null    float64
+ 42  lashade_veg1800                      571 non-null    float64
+ 43  lashade_tot1200                      571 non-null    float64
+ 44  lashade_tot1500                      571 non-null    float64
+ 45  lashade_tot1800                      571 non-null    float64
+ 46  dist_to_venue1                       2650 non-null   float64
+ 47  closest_venue_sport                  2650 non-null   object 
+ 48  dist_to_venue3                       2650 non-null   float64
+ 49  cva_population                       1695 non-null   float64
+ 50  cva_children                         1695 non-null   float64
+ 51  cva_older_adults                     1695 non-null   float64
+ 52  cva_older_adults_living_alone        1695 non-null   float64
+ 53  cva_limited_english                  1695 non-null   float64
+ 54  cva_no_high_school_diploma           1695 non-null   float64
+ 55  cva_female                           1695 non-null   float64
+ 56  cva_female_householder               1695 non-null   float64
+ 57  cva_disability                       1695 non-null   float64
+ 58  cva_no_health_insurance              1695 non-null   float64
+ 59  cva_living_in_group_quarters         1695 non-null   float64
+ 60  cva_mobile_homes                     1695 non-null   float64
+ 61  cva_rent_burden                      1695 non-null   float64
+ 62  cva_renters                          1695 non-null   float64
+ 63  cva_median_income                    1695 non-null   float64
+ 64  cva_poverty                          1695 non-null   float64
+ 65  cva_households_without_vehicle_acce  1695 non-null   float64
+ 66  cva_outdoor_workers                  1695 non-null   float64
+ 67  cva_unemployed                       1695 non-null   float64
+ 68  cva_foreign_born                     1695 non-null   float64
+ 69  cva_no_internet_subscription         1695 non-null   float64
+ 70  cva_voter_turnout_rate               1695 non-null   float64
+ 71  cva_sovi_score                       1695 non-null   float64
+ 72  cva_asthma                           1695 non-null   float64
+ 73  cva_cardiovascular_disease           1695 non-null   float64
+ 74  cva_transit_access                   1695 non-null   float64
+ 75  pm25                                 1170 non-null   float64
+ 76  pm25_percentile                      1170 non-null   float64
+ 77  tree_percent_w                       1752 non-null   float64
+ 78  urban_heat_idx                       610 non-null    float64
+ 79  urban_heat_idx_percentile            613 non-null    float64
+ 80  dist_to_vacant_park_1                2650 non-null   float64
+ 81  dist_to_vacant_park_3                2650 non-null   float64
+ 82  dist_to_vacant_street_1              2650 non-null   float64
+ 83  dist_to_vacant_street_3              2650 non-null   float64
+dtypes: float64(79), int64(1), object(4)
+memory usage: 1.7+ MB
+None
+
+
+=== SUMMARY STATS (all numeric features) ===
+                                      count          mean           std            min           25%           50%           75%           max
+latitude                             2650.0  3.426445e+01  3.321546e-01      33.700000  3.398222e+01  3.426445e+01  3.454667e+01  3.482890e+01
+longitude                            2650.0 -1.183063e+02  3.791961e-01    -118.950000 -1.186347e+02 -1.183063e+02 -1.179779e+02 -1.176627e+02
+dist_to_ac_1                         2650.0  3.202296e+01  1.955097e+01       0.356396  1.552118e+01  3.109406e+01  4.676990e+01  8.730669e+01
+dist_to_ac_3                         2650.0  3.397534e+01  1.920263e+01       1.018708  1.828935e+01  3.265029e+01  4.843369e+01  8.931033e+01
+dist_to_hydro_1                      2650.0  3.184741e+01  2.014591e+01       0.120738  1.479773e+01  3.092601e+01  4.703539e+01  8.946783e+01
+dist_to_hydro_3                      2650.0  3.326946e+01  2.022615e+01       0.269712  1.640257e+01  3.230827e+01  4.825926e+01  9.067155e+01
+install_year_hydro_3                 2650.0  2.020827e+03  2.449759e+00    2019.000000  2.020000e+03  2.021000e+03  2.021000e+03  2.079000e+03
+dist_to_busline_1                    2650.0  2.363620e+01  2.023048e+01       0.000394  5.179490e+00  1.969260e+01  3.742418e+01  8.220575e+01
+dist_to_busline_3                    2650.0  2.431580e+01  2.000593e+01       0.000394  6.198758e+00  2.070623e+01  3.804428e+01  8.220575e+01
+dist_to_busstop_1                    2650.0  2.313261e+01  2.037434e+01       0.011584  4.556496e+00  1.849544e+01  3.736858e+01  8.220299e+01
+dist_to_busstop_3                    2650.0  2.321278e+01  2.036771e+01       0.053177  4.742754e+00  1.858100e+01  3.745791e+01  8.227563e+01
+dist_to_metroline_1                  2650.0  3.331509e+01  2.222363e+01       0.008073  1.431382e+01  3.078255e+01  4.997074e+01  8.992495e+01
+dist_to_metroline_3                  2650.0  3.528236e+01  2.196535e+01       0.115111  1.678113e+01  3.291036e+01  5.158985e+01  8.992587e+01
+dist_to_metrostop_1                  2650.0  3.348136e+01  2.224800e+01       0.079518  1.441680e+01  3.091681e+01  5.011770e+01  9.021051e+01
+dist_to_metrostop_3                  2650.0  3.494793e+01  2.270629e+01       0.637790  1.574447e+01  3.229072e+01  5.187455e+01  9.402317e+01
+lashade_ua_pop                        571.0  1.085734e+07  3.815792e+06  216387.000000  1.223558e+07  1.223558e+07  1.223558e+07  1.223558e+07
+lashade_cbg_pop                       571.0  1.667410e+03  7.844632e+02       0.000000  1.131000e+03  1.548000e+03  2.098500e+03  5.584000e+03
+lashade_acs_pop                       571.0  1.654965e+03  8.432251e+02       0.000000  1.071500e+03  1.533000e+03  2.107000e+03  5.850000e+03
+lashade_tc_goal                       571.0  2.845884e-01  3.661987e-02       0.150000  3.000000e-01  3.000000e-01  3.000000e-01  3.000000e-01
+lashade_treecanopy                    571.0  1.685373e-01  1.250348e-01       0.007800  8.105000e-02  1.245000e-01  2.221000e-01  6.880000e-01
+lashade_tc_gap                        571.0  1.328140e-01  8.398591e-02       0.000000  6.415000e-02  1.505000e-01  2.000000e-01  2.893000e-01
+lashade_pctpoc                        571.0  6.597847e-01  2.809085e-01       0.000000  4.423390e-01  7.266092e-01  9.227934e-01  1.000000e+00
+lashade_pctpov                        571.0  2.515282e-01  1.993203e-01       0.000000  1.075732e-01  1.926771e-01  3.501322e-01  1.000000e+00
+lashade_unemplrate                    571.0  5.890187e-02  4.735277e-02       0.000000  2.413793e-02  5.241935e-02  8.353906e-02  3.283582e-01
+lashade_dep_ratio                     571.0  7.014829e-01  1.064565e+00       0.000000  4.636945e-01  5.784884e-01  7.688479e-01  1.300000e+01
+lashade_dep_perc                      571.0  3.692771e-01  1.167865e-01       0.000000  3.167973e-01  3.664825e-01  4.346601e-01  1.000000e+00
+lashade_linguistic                    571.0  7.376701e-02  7.321644e-02       0.000000  2.182952e-02  5.065533e-02  1.057512e-01  4.448099e-01
+lashade_health_nor                    571.0  3.081122e-01  1.070677e-01       0.025320  2.335199e-01  2.932687e-01  3.658958e-01  7.732840e-01
+lashade_temp_diff                     571.0 -9.251489e-01  5.450618e+00     -27.000000 -3.885000e+00  2.900000e-01  3.065000e+00  1.002000e+01
+lashade_tes                           571.0  8.017513e+01  1.375835e+01      37.000000  7.000000e+01  7.900000e+01  9.100000e+01  1.000000e+02
+lashade_child_perc                    571.0  1.986056e-01  8.607870e-02       0.000000  1.433969e-01  2.005305e-01  2.503609e-01  4.483221e-01
+lashade_seniorperc                    571.0  1.706716e-01  1.151895e-01       0.000000  9.608561e-02  1.572965e-01  2.230063e-01  1.000000e+00
+lashade_rank                          571.0  3.417040e+02  6.489805e+02       1.000000  4.500000e+00  2.700000e+01  2.410000e+02  2.659000e+03
+lashade_rankgrpsz                     571.0  8.852732e+02  1.212196e+03       1.000000  2.900000e+01  8.000000e+01  2.675000e+03  2.675000e+03
+lashade_bld1200                       571.0  2.234326e-03  3.789428e-03       0.000000  6.000000e-04  1.100000e-03  2.000000e-03  3.680000e-02
+lashade_veg1200                       571.0  2.168919e-01  1.039289e-01       0.023300  1.447500e-01  1.918000e-01  2.673000e-01  6.131000e-01
+lashade_bld1500                       571.0  3.922539e-02  2.755313e-02       0.001400  2.220000e-02  3.330000e-02  4.960000e-02  2.338000e-01
+lashade_veg1500                       571.0  2.494478e-01  1.158989e-01       0.035300  1.682000e-01  2.214000e-01  3.031500e-01  6.463000e-01
+lashade_bld1800                       571.0  3.205715e-01  1.335093e-01       0.030300  2.302500e-01  3.096000e-01  3.964500e-01  8.123000e-01
+lashade_veg1800                       571.0  2.836123e-01  9.859354e-02       0.043300  2.114500e-01  2.773000e-01  3.431500e-01  6.358000e-01
+lashade_tot1200                       571.0  2.191238e-01  1.056769e-01       0.023400  1.457500e-01  1.935000e-01  2.700000e-01  6.177000e-01
+lashade_tot1500                       571.0  2.886634e-01  1.276551e-01       0.045500  2.047000e-01  2.609000e-01  3.482000e-01  7.212000e-01
+lashade_tot1800                       571.0  6.034257e-01  1.602194e-01       0.140100  5.093500e-01  5.997000e-01  7.056000e-01  9.849000e-01
+dist_to_venue1                       2650.0  3.136193e+01  2.193336e+01       0.091010  1.177034e+01  2.789479e+01  4.797992e+01  8.379069e+01
+dist_to_venue3                       2650.0  3.581439e+01  2.180532e+01       0.412057  1.743818e+01  3.215657e+01  5.214516e+01  9.102651e+01
+cva_population                       1695.0  3.335063e+03  2.366401e+03       5.000000  7.950000e+02  3.494000e+03  5.292000e+03  1.327700e+04
+cva_children                         1695.0  2.204419e+01  8.864167e+00       0.000000  1.840000e+01  2.310000e+01  2.740000e+01  6.370000e+01
+cva_older_adults                     1695.0  1.623971e+01  6.548676e+00       0.000000  1.040000e+01  1.640000e+01  2.060000e+01  4.900000e+01
+cva_older_adults_living_alone        1695.0  1.011322e+01  6.322148e+00       0.000000  6.100000e+00  1.040000e+01  1.230000e+01  5.850000e+01
+cva_limited_english                  1695.0  6.644012e+00  6.862806e+00       0.000000  2.000000e+00  4.100000e+00  9.300000e+00  5.850000e+01
+cva_no_high_school_diploma           1695.0  1.651428e+01  1.185112e+01       0.000000  9.100000e+00  1.290000e+01  1.995000e+01  6.680000e+01
+cva_female                           1695.0  4.831823e+01  8.400701e+00       0.200000  4.700000e+01  5.030000e+01  5.270000e+01  1.000000e+02
+cva_female_householder               1695.0  1.082195e+01  6.520420e+00       0.000000  6.300000e+00  8.500000e+00  1.520000e+01  4.130000e+01
+cva_disability                       1695.0  1.111457e+01  4.738633e+00       0.000000  8.400000e+00  1.020000e+01  1.290000e+01  3.330000e+01
+cva_no_health_insurance              1695.0  7.264602e+00  4.929145e+00       0.000000  3.300000e+00  6.500000e+00  1.040000e+01  3.580000e+01
+cva_living_in_group_quarters         1695.0  8.070029e+00  1.609770e+01       0.000000  0.000000e+00  6.000000e-01  4.100000e+00  1.000000e+02
+cva_mobile_homes                     1695.0  6.047021e+00  7.943554e+00       0.000000  0.000000e+00  2.000000e+00  1.020000e+01  8.760000e+01
+cva_rent_burden                      1695.0  4.836743e+01  1.508519e+01       0.000000  3.585000e+01  5.370000e+01  5.760000e+01  1.000000e+02
+cva_renters                          1695.0  2.849357e+01  1.967438e+01       0.000000  1.185000e+01  2.360000e+01  3.730000e+01  1.000000e+02
+cva_median_income                    1695.0  8.112200e+04  3.612531e+04   12135.000000  5.697900e+04  7.531300e+04  1.035420e+05  2.500010e+05
+cva_poverty                          1695.0  1.466549e+01  1.004528e+01       0.000000  6.800000e+00  1.410000e+01  1.850000e+01  7.360000e+01
+cva_households_without_vehicle_acce  1695.0  4.894631e+00  5.368288e+00       0.000000  1.100000e+00  4.200000e+00  6.800000e+00  5.850000e+01
+cva_outdoor_workers                  1695.0  6.645015e+00  5.677810e+00       0.000000  2.600000e+00  5.100000e+00  9.700000e+00  1.910000e+01
+cva_unemployed                       1695.0  5.797286e+00  3.623230e+00       0.000000  4.000000e+00  5.600000e+00  8.100000e+00  2.710000e+01
+cva_foreign_born                     1695.0  2.084637e+01  1.230637e+01       0.000000  9.800000e+00  2.000000e+01  2.680000e+01  7.150000e+01
+cva_no_internet_subscription         1695.0  1.519115e+01  1.135440e+01       0.000000  7.400000e+00  1.240000e+01  2.290000e+01  5.940000e+01
+cva_voter_turnout_rate               1695.0  6.992236e+01  7.181511e+00       0.000000  6.480000e+01  7.220000e+01  7.400000e+01  8.230000e+01
+cva_sovi_score                       1695.0 -7.118702e-01  3.083877e+00      -9.970000 -2.875000e+00 -9.300000e-01  1.290000e+00  7.760000e+00
+cva_asthma                           1695.0  4.343835e+01  2.865643e+01       4.000000  2.390000e+01  3.420000e+01  5.190000e+01  1.541000e+02
+cva_cardiovascular_disease           1695.0  8.198171e+00  2.745186e+00       1.400000  6.200000e+00  7.800000e+00  9.500000e+00  1.600000e+01
+cva_transit_access                   1695.0  1.244053e+01  3.006527e+01       0.000000  0.000000e+00  0.000000e+00  0.000000e+00  1.000000e+02
+pm25                                 1170.0  9.599485e+00  2.261999e+00       5.789804  7.211912e+00  9.867045e+00  1.180749e+01  1.391010e+01
+pm25_percentile                      1170.0  5.712496e-01  3.061054e-01       0.023235  3.041720e-01  5.236200e-01  9.261874e-01  9.750963e-01
+tree_percent_w                       1752.0  1.989840e+00  2.809718e+00       0.000000  0.000000e+00  0.000000e+00  4.100000e+00  1.600000e+01
+urban_heat_idx                        610.0  8.540325e+03  8.780644e+03      19.200000  2.114150e+03  4.455900e+03  1.383295e+04  3.706570e+04
+urban_heat_idx_percentile             613.0  4.897486e-01  3.005485e-01       0.004247  2.332861e-01  4.410886e-01  8.044675e-01  9.825389e-01
+dist_to_vacant_park_1                2650.0  2.921834e+01  1.979950e+01       0.012016  1.224005e+01  2.797863e+01  4.416694e+01  8.589904e+01
+dist_to_vacant_park_3                2650.0  2.929155e+01  1.978564e+01       0.024434  1.244357e+01  2.806813e+01  4.427856e+01  8.589995e+01
+dist_to_vacant_street_1              2650.0  2.814802e+01  1.963413e+01       0.000885  1.119551e+01  2.698158e+01  4.311198e+01  8.421359e+01
+dist_to_vacant_street_3              2650.0  2.818771e+01  1.963214e+01       0.009923  1.124820e+01  2.698859e+01  4.313965e+01  8.423397e+01
+
+🌳 Spatially imputing 31 LA Shade columns using haversine k=1 ...
+
+Top missingness AFTER spatial impute (first 15 cols):
+urban_heat_idx                         0.769811
+urban_heat_idx_percentile              0.768679
+pm25                                   0.558491
+pm25_percentile                        0.558491
+cva_poverty                            0.360377
+cva_households_without_vehicle_acce    0.360377
+cva_voter_turnout_rate                 0.360377
+cva_sovi_score                         0.360377
+cva_female_householder                 0.360377
+cva_disability                         0.360377
+cva_outdoor_workers                    0.360377
+cva_unemployed                         0.360377
+cva_foreign_born                       0.360377
+cva_no_internet_subscription           0.360377
+cva_rent_burden                        0.360377
+dtype: float64
+
+📉 Dropping 2 non-LA Shade columns (> 60.0% missing):
+['urban_heat_idx', 'urban_heat_idx_percentile']
+
+✅ Added engineered features: ['canopy_gap', 'canopy_percent_of_goal', 'avg_transport_access', 'env_exposure_index', 'tree_percent_w_norm', 'pm25_norm', 'impervious_ratio', 'impervious_ratio_norm']
+
+📉 Dropping 19 highly correlated columns (>0.95):
+['dist_to_ac_3', 'dist_to_hydro_1', 'dist_to_hydro_3', 'dist_to_busline_3', 'dist_to_busstop_1', 'dist_to_busstop_3', 'dist_to_metroline_3', 'dist_to_metrostop_1', 'dist_to_metrostop_3', 'lashade_veg1500', 'lashade_tot1200', 'lashade_tot1500', 'dist_to_venue1', 'dist_to_venue3', 'pm25_percentile', 'dist_to_vacant_park_1', 'dist_to_vacant_park_3', 'dist_to_vacant_street_1', 'dist_to_vacant_street_3']
+
+🔎 Engineered features now in dataframe:
+   - canopy_gap (non-null count: 2650)
+   - canopy_percent_of_goal (non-null count: 2650)
+   - avg_transport_access (non-null count: 2650)
+   - env_exposure_index (non-null count: 2650)
+   - tree_percent_w_norm (non-null count: 2650)
+   - pm25_norm (non-null count: 2650)
+   - impervious_ratio (non-null count: 2650)
+   - impervious_ratio_norm (non-null count: 2650)
+
+--- DONE ---
+💾 Cleaned dataset: eda_outputs_test/data_cleaned.csv
+🖼️ Visualizations saved in: /mnt/c/Users/maohe/Desktop/files/WorkSpace/Projects/csci461&444/461 group proj/eda_outputs_test
+📝 Logs saved: engineered_features.txt, final_feature_list.txt, dropped_columns.txt
