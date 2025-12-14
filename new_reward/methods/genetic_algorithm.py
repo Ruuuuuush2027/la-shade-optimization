@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 def genetic_algorithm_optimization(reward_function,
                                    k: int,
                                    population_size: int = 100,
-                                   generations: int = 200,
+                                   generations: int = 50,
                                    mutation_rate: float = 0.15,
                                    crossover_rate: float = 0.8,
                                    tournament_size: int = 5,
@@ -67,6 +67,7 @@ def genetic_algorithm_optimization(reward_function,
     for generation in range(generations):
         # Evaluate fitness (optionally in parallel)
         fitness_scores = eval_population(population)
+        fitness_scores = np.nan_to_num(fitness_scores, nan=-np.inf)
 
         # Update best
         max_fitness_idx = np.argmax(fitness_scores)

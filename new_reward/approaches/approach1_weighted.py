@@ -72,7 +72,8 @@ class EnhancedWeightedSumReward(BaseRewardFunction):
         self.constraints = ConstraintManager(
             spatial_config=constraint_config.get('spatial'),
             saturation_config=constraint_config.get('saturation'),
-            shade_config=constraint_config.get('shade')
+            shade_config=constraint_config.get('shade'),
+            planting_config=constraint_config.get('planting')
         )
 
         print(f"✓ Enhanced Weighted Sum initialized")
@@ -130,7 +131,10 @@ class EnhancedWeightedSumReward(BaseRewardFunction):
         # 1. Existing shade penalty
         shade_penalty = self.constraints.existing_shade.get_shade_penalty(features)
 
-        # 2. Saturation factor (diminishing marginal utility on heat)
+        # 2. Planting opportunity constraint (HARD: zero reward if not plantable)
+        planting_penalty = self.constraints.planting.get_planting_penalty(features)
+
+        # 3. Saturation factor (diminishing marginal utility on heat)
         # Update saturation based on current state
         self.constraints.update_state(state, self.data, self.haversine_distance)
         saturation_factor = self.constraints.saturation.get_saturation_factor(action_idx)
@@ -149,8 +153,8 @@ class EnhancedWeightedSumReward(BaseRewardFunction):
                 self.weights['coverage'] * r_coverage
             )
 
-        # Final reward with penalties
-        final_reward = base_reward * shade_penalty
+        # Final reward with penalties (planting_penalty applied first as hard constraint)
+        final_reward = base_reward * shade_penalty * planting_penalty
 
         return np.clip(final_reward, 0, 2.0)  # Allow slight overshoot for EJ multiplier
 
@@ -205,13 +209,13 @@ class EnhancedWeightedSumReward(BaseRewardFunction):
 
         # Calculate final
         base_reward = sum(weighted.values())
-        final_reward = base_reward * penalties['existing_shade_penalty']
+        final_reward = base_reward * penalties['existing_shade_penalty'] * penalties['planting_penalty']
 
         # Apply saturation to heat if applicable
         if self.constraints.saturation.applies_to_component('heat'):
             heat_adjusted = components['heat'] * penalties['saturation_factor']
             base_reward_adjusted = base_reward - weighted['heat'] + (heat_adjusted * self.weights['heat'])
-            final_reward = base_reward_adjusted * penalties['existing_shade_penalty']
+            final_reward = base_reward_adjusted * penalties['existing_shade_penalty'] * penalties['planting_penalty']
 
         return {
             'total_reward': final_reward,

@@ -20,37 +20,7 @@ from new_reward.evaluation import (
     compare_methods,
     create_all_visualizations
 )
-
-
-def greedy_optimization(reward_function, k: int, verbose: bool = False):
-    """Greedy optimization: iteratively select best shade location."""
-    state = []
-    n_points = len(reward_function.data)
-
-    for i in range(k):
-        best_idx = None
-        best_reward = -np.inf
-
-        for idx in range(n_points):
-            if idx in state:
-                continue
-
-            reward = reward_function.calculate_reward(state, idx)
-
-            if reward > best_reward:
-                best_reward = reward
-                best_idx = idx
-
-        if best_idx is None:
-            print(f"Warning: Could not find valid location at iteration {i+1}")
-            break
-
-        state.append(best_idx)
-
-        if verbose and (i+1) % max(1, k//5) == 0:
-            print(f"  Progress: {i+1}/{k} placements selected")
-
-    return state
+from new_reward.methods.greedy import greedy_optimization
 
 
 def random_baseline(data: pd.DataFrame, k: int, n_trials: int = 5, seed: int = 42):

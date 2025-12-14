@@ -1,0 +1,177 @@
+{
+  "metadata": {
+    "region": "All",
+    "approach": "Approach3",
+    "method": "NSGA-II",
+    "k": 20,
+    "timestamp": "2025-12-11T13:40:21.554623",
+    "elapsed_seconds": 10381.414932250977,
+    "planting_constraint": {
+      "field": "planting_opportunity",
+      "threshold": 2.0,
+      "enabled": true
+    }
+  },
+  "placements": [
+    417,
+    1015,
+    2,
+    1108,
+    469,
+    20,
+    561,
+    838,
+    1131,
+    31,
+    723,
+    779,
+    11,
+    372,
+    322,
+    892,
+    165,
+    226,
+    1119,
+    588
+  ],
+  "placement_coordinates": [
+    {
+      "index": 417,
+      "latitude": 34.01257331864815,
+      "longitude": -118.26178742140424,
+      "planting_opportunity": 4.201437657001449
+    },
+    {
+      "index": 1015,
+      "latitude": 34.038624749163304,
+      "longitude": -118.317665,
+      "planting_opportunity": 5.10677179027966
+    },
+    {
+      "index": 2,
+      "latitude": 33.996653,
+      "longitude": -118.31417265133776,
+      "planting_opportunity": 4.559913819154372
+    },
+    {
+      "index": 1108,
+      "latitude": 34.04151935255388,
+      "longitude": -118.2775029903843,
+      "planting_opportunity": 8.273959476775156
+    },
+    {
+      "index": 469,
+      "latitude": 34.015467922038724,
+      "longitude": -118.29321855936436,
+      "planting_opportunity": 4.037101797242005
+    },
+    {
+      "index": 20,
+      "latitude": 33.996653,
+      "longitude": -118.28274151337766,
+      "planting_opportunity": 4.057053034840536
+    },
+    {
+      "index": 561,
+      "latitude": 34.01980982712458,
+      "longitude": -118.31591882566887,
+      "planting_opportunity": 2.5271144540624544
+    },
+    {
+      "index": 838,
+      "latitude": 34.02994093899159,
+      "longitude": -118.26004124707312,
+      "planting_opportunity": 2.545433913355758
+    },
+    {
+      "index": 1131,
+      "latitude": 34.04296665424916,
+      "longitude": -118.29845708235771,
+      "planting_opportunity": 5.049435946097568
+    },
+    {
+      "index": 31,
+      "latitude": 33.996653,
+      "longitude": -118.26353359573535,
+      "planting_opportunity": 8.645315590540653
+    },
+    {
+      "index": 723,
+      "latitude": 34.02559903390573,
+      "longitude": -118.2775029903843,
+      "planting_opportunity": 2.4570016939579333
+    },
+    {
+      "index": 779,
+      "latitude": 34.0284936372963,
+      "longitude": -118.30194943101996,
+      "planting_opportunity": 8.565440962448857
+    },
+    {
+      "index": 11,
+      "latitude": 33.996653,
+      "longitude": -118.29845708235771,
+      "planting_opportunity": 4.612647872784937
+    },
+    {
+      "index": 372,
+      "latitude": 34.011126016952865,
+      "longitude": -118.27924916471542,
+      "planting_opportunity": 2.179704566264084
+    },
+    {
+      "index": 322,
+      "latitude": 34.00967871525758,
+      "longitude": -118.30544177968218,
+      "planting_opportunity": 4.503580960501156
+    },
+    {
+      "index": 892,
+      "latitude": 34.03283554238216,
+      "longitude": -118.287980036371,
+      "planting_opportunity": 4.099544129096246
+    },
+    {
+      "index": 165,
+      "latitude": 34.00244220678115,
+      "longitude": -118.27401064172209,
+      "planting_opportunity": 2.7855524302373267
+    },
+    {
+      "index": 226,
+      "latitude": 34.00533681017172,
+      "longitude": -118.28972621070211,
+      "planting_opportunity": 2.8538968689954327
+    },
+    {
+      "index": 1119,
+      "latitude": 34.04151935255388,
+      "longitude": -118.25829507274202,
+      "planting_opportunity": 2.0734463895597
+    },
+    {
+      "index": 588,
+      "latitude": 34.01980982712458,
+      "longitude": -118.26877211872872,
+      "planting_opportunity": 2.60461185186609
+    }
+  ],
+  "metrics": {
+    "heat_sum": 972.8430231526534,
+    "socio_sum": 44.12,
+    "public_access": 1.976364286027457,
+    "close_pairs_500m": 0.0,
+    "olympic_coverage": 11.11111111111111,
+    "equity_gini": 0.7441754988844074,
+    "spatial_efficiency": 3.2821233674360486,
+    "population_served": 2201291.0
+  },
+  "pareto_front": {
+    "front_size": 100,
+    "selection_method": "hypervolume",
+    "nsga2_config": {
+      "population_size": 100,
+      "generations": 200
+    }
+  }
+}

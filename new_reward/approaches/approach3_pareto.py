@@ -59,8 +59,17 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
         self.crossover_rate = nsga2_config.get('crossover_rate', 0.8)
         self.crowding_distance_weight = nsga2_config.get('crowding_distance_weight', 0.5)
 
-        # Constraint: Hard minimum distance
-        self.hard_minimum_km = 0.5
+        # Read constraint config
+        constraints_config = config.get('constraints', {}) if config else {}
+        planting_config = constraints_config.get('planting', {})
+        spatial_config = constraints_config.get('spatial', {})
+
+        # Planting opportunity constraint
+        self.planting_threshold = planting_config.get('min_threshold', 2.0)
+        self.planting_field = planting_config.get('field_name', 'planting_opportunity')
+
+        # Spatial distance constraint
+        self.hard_minimum_km = spatial_config.get('min_distance_km', 0.5)
 
         print(f"✓ Pareto Multi-Objective initialized")
         print(f"  Population: {self.population_size}, Generations: {self.generations}")
@@ -171,8 +180,15 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
             placements: Shade location indices
 
         Returns:
-            True if feasible (all pairwise distances >= hard_minimum)
+            True if feasible (all pairwise distances >= hard_minimum AND all plantable)
         """
+        # Check planting opportunity constraint
+        if self.planting_field in self.data.columns:
+            for idx in placements:
+                if self.data.loc[idx, self.planting_field] <= self.planting_threshold:
+                    return False
+
+        # Check spatial distance constraint
         for i, idx1 in enumerate(placements):
             lat1 = self.data.loc[idx1, 'latitude']
             lon1 = self.data.loc[idx1, 'longitude']
@@ -188,20 +204,79 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
 
         return True
 
-    def dominates(self, obj1: Dict[str, float], obj2: Dict[str, float]) -> bool:
+    def calculate_constraint_violation(self, placements: List[int], target_k: int) -> float:
         """
-        Check if obj1 dominates obj2 (Pareto dominance).
+        Calculate total constraint violation for NSGA-II constraint dominance.
 
-        obj1 dominates obj2 if:
-        - obj1 is better or equal on ALL objectives
-        - obj1 is strictly better on AT LEAST ONE objective
+        Per Deb et al. (2002), returns sum of normalized constraint violations.
+        Lower is better, 0.0 means fully feasible.
+
+        Args:
+            placements: Shade location indices
+            target_k: Target number of placements
+
+        Returns:
+            Total violation (0.0 if feasible)
+        """
+        violation = 0.0
+
+        # 1. Missing locations penalty (most important)
+        if len(placements) < target_k:
+            violation += (target_k - len(placements)) * 10.0  # Heavy penalty
+
+        # 2. Planting opportunity violations
+        if self.planting_field in self.data.columns:
+            for idx in placements:
+                plant_val = self.data.loc[idx, self.planting_field]
+                if plant_val <= self.planting_threshold:
+                    violation += (self.planting_threshold - plant_val)
+
+        # 3. Spatial distance violations
+        for i, idx1 in enumerate(placements):
+            lat1 = self.data.loc[idx1, 'latitude']
+            lon1 = self.data.loc[idx1, 'longitude']
+
+            for idx2 in placements[i+1:]:
+                lat2 = self.data.loc[idx2, 'latitude']
+                lon2 = self.data.loc[idx2, 'longitude']
+                dist = self.haversine_distance(lat1, lon1, lat2, lon2)
+
+                if dist < self.hard_minimum_km:
+                    violation += (self.hard_minimum_km - dist) * 5.0  # Moderate penalty
+
+        return violation
+
+    def dominates(self, obj1: Dict[str, float], obj2: Dict[str, float],
+                  cv1: float, cv2: float) -> bool:
+        """
+        Check if solution 1 dominates solution 2 using NSGA-II constraint dominance.
+
+        Constraint dominance rules (Deb et al., 2002):
+        1. Feasible dominates infeasible
+        2. Between two infeasible: smaller violation dominates
+        3. Between two feasible: Pareto dominance on objectives
 
         Args:
             obj1, obj2: Objective dictionaries
+            cv1, cv2: Constraint violations (0.0 = feasible)
 
         Returns:
-            True if obj1 dominates obj2
+            True if solution 1 dominates solution 2
         """
+        feasible1 = (cv1 == 0.0)
+        feasible2 = (cv2 == 0.0)
+
+        # Rule 1: Feasible dominates infeasible
+        if feasible1 and not feasible2:
+            return True
+        if not feasible1 and feasible2:
+            return False
+
+        # Rule 2: Both infeasible - compare violations
+        if not feasible1 and not feasible2:
+            return cv1 < cv2
+
+        # Rule 3: Both feasible - Pareto dominance
         better_or_equal_all = all(obj1[k] >= obj2[k] for k in obj1.keys())
         strictly_better_one = any(obj1[k] > obj2[k] for k in obj1.keys())
 
@@ -248,9 +323,10 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
         for generation in range(self.generations):
             # Evaluate objectives
             objectives = [self.calculate_objectives(sol) for sol in population]
+            violations = [self.calculate_constraint_violation(sol, k) for sol in population]
 
             # Non-dominated sorting
-            fronts = self._fast_non_dominated_sort(population, objectives)
+            fronts = self._fast_non_dominated_sort(population, objectives, violations)
 
             # Calculate crowding distance
             for front in fronts:
@@ -275,12 +351,15 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
                 offspring.extend([child1, child2])
 
             # Combine population and offspring
+            offspring_objectives = [self.calculate_objectives(sol) for sol in offspring]
+            offspring_violations = [self.calculate_constraint_violation(sol, k) for sol in offspring]
             combined = population + offspring
-            combined_objectives = objectives + [self.calculate_objectives(sol) for sol in offspring]
+            combined_objectives = objectives + offspring_objectives
+            combined_violations = violations + offspring_violations
 
             # Select next generation
-            population, objectives = self._select_next_generation(
-                combined, combined_objectives, self.population_size
+            population, objectives, violations = self._select_next_generation(
+                combined, combined_objectives, combined_violations, self.population_size
             )
 
             if (generation + 1) % 50 == 0:
@@ -289,7 +368,8 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
 
         # Final evaluation
         final_objectives = [self.calculate_objectives(sol) for sol in population]
-        fronts = self._fast_non_dominated_sort(population, final_objectives)
+        final_violations = [self.calculate_constraint_violation(sol, k) for sol in population]
+        fronts = self._fast_non_dominated_sort(population, final_objectives, final_violations)
 
         pareto_front = [population[i] for i in fronts[0]]
         pareto_objectives = [final_objectives[i] for i in fronts[0]]
@@ -299,31 +379,159 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
         return pareto_front, pareto_objectives
 
     def _initialize_population(self, k: int) -> List[List[int]]:
-        """Initialize population with random feasible solutions."""
+        """
+        Initialize population using greedy-diverse construction.
+
+        Builds solutions incrementally with randomized selection from top candidates
+        to ensure feasibility while maintaining diversity.
+        """
+        # Get plantable locations
+        planting_field = self.planting_field if self.planting_field in self.data.columns else None
+        if planting_field:
+            plantable = self.data[self.data[planting_field] > self.planting_threshold].index.tolist()
+            if not plantable:
+                plantable = list(self.data.index)
+        else:
+            plantable = list(self.data.index)
+
+        print(f"  Initializing population: {self.population_size} solutions, k={k}")
+        print(f"  Plantable candidates: {len(plantable)}")
+
         population = []
-        n_points = len(self.data)
+        incomplete = 0
 
-        attempts = 0
-        max_attempts = self.population_size * 10
+        for i in range(self.population_size):
+            solution = self._greedy_diverse_solution(k, plantable, seed=i)
+            if len(solution) < k:
+                incomplete += 1
+            solution = self._fill_solution(solution, k)
+            population.append(solution)
 
-        while len(population) < self.population_size and attempts < max_attempts:
-            attempts += 1
+        if incomplete > 0:
+            print(f"  ⚠ {incomplete} solutions incomplete, padded with random candidates")
 
-            # Random sample
-            solution = random.sample(range(n_points), k)
-
-            # Check feasibility
-            if self.is_feasible(solution):
-                population.append(solution)
-
-        # Fill remaining with duplicates if needed
         while len(population) < self.population_size:
-            population.append(random.choice(population))
+            base = random.choice(population)
+            mutated = self._mutate(base.copy(), k)
+            population.append(mutated)
 
+        print(f"  ✓ Generated {self.population_size} solutions")
         return population
 
-    def _fast_non_dominated_sort(self, population, objectives):
-        """Fast non-dominated sorting (NSGA-II)."""
+    def _greedy_diverse_solution(self, k: int, candidates: List[int], seed: int) -> List[int]:
+        """
+        Build solution greedily with randomization for diversity.
+
+        Args:
+            k: Number of locations to select
+            candidates: List of candidate location indices (pre-filtered for plantability)
+            seed: Random seed for reproducibility and diversity
+
+        Returns:
+            List of location indices (may be fewer than k if constraints block additions)
+        """
+        random.seed(seed)
+        solution = []
+        available = candidates.copy()
+        random.shuffle(available)  # Additional randomization
+
+        for step in range(k):
+            # Score all available candidates
+            valid_candidates = []
+            for idx in available:
+                if self._is_valid_addition(solution, idx):
+                    # Simple score: prioritize spatial diversity
+                    min_dist = self._min_dist_to_solution(solution, idx) if solution else float('inf')
+                    score = min_dist  # Higher distance = better
+                    valid_candidates.append((idx, score))
+
+            if not valid_candidates:
+                # Can't find more valid locations
+                if step < k:
+                    print(f"    Warning: Solution {seed} only found {step}/{k} locations")
+                break
+
+            # Select from top-N candidates randomly (diversity)
+            valid_candidates.sort(key=lambda x: x[1], reverse=True)
+
+            # Adaptive top-n: reduce as candidates become scarce
+            top_n = min(10, max(3, len(valid_candidates) // 10))
+            if len(valid_candidates) < top_n:
+                top_n = len(valid_candidates)
+
+            selected_idx = random.choice([idx for idx, _ in valid_candidates[:top_n]])
+
+            solution.append(selected_idx)
+            available.remove(selected_idx)
+
+        return solution
+
+    def _fill_solution(self, solution: List[int], k: int) -> List[int]:
+        """Pad partial solutions with random candidates to reach length k."""
+        filled = solution.copy()
+        available = list(set(self.data.index) - set(filled))
+        while len(filled) < k and available:
+            choice = random.choice(available)
+            filled.append(choice)
+            available.remove(choice)
+        return filled
+
+    def _is_valid_addition(self, solution: List[int], idx: int) -> bool:
+        """
+        Check if adding idx to solution maintains feasibility.
+
+        Args:
+            solution: Current partial solution
+            idx: Candidate location index
+
+        Returns:
+            True if idx can be added without violating spatial constraints
+        """
+        if not solution:
+            return True  # First location always valid
+
+        # Check distance to all existing locations
+        idx_lat = self.data.loc[idx, 'latitude']
+        idx_lon = self.data.loc[idx, 'longitude']
+
+        for existing_idx in solution:
+            ex_lat = self.data.loc[existing_idx, 'latitude']
+            ex_lon = self.data.loc[existing_idx, 'longitude']
+            dist = self.haversine_distance(idx_lat, idx_lon, ex_lat, ex_lon)
+
+            if dist < self.hard_minimum_km:
+                return False
+
+        return True
+
+    def _min_dist_to_solution(self, solution: List[int], idx: int) -> float:
+        """
+        Calculate minimum distance from idx to any location in solution.
+
+        Args:
+            solution: Current partial solution
+            idx: Candidate location index
+
+        Returns:
+            Minimum distance in km (inf if solution is empty)
+        """
+        if not solution:
+            return float('inf')
+
+        idx_lat = self.data.loc[idx, 'latitude']
+        idx_lon = self.data.loc[idx, 'longitude']
+
+        min_dist = float('inf')
+        for existing_idx in solution:
+            ex_lat = self.data.loc[existing_idx, 'latitude']
+            ex_lon = self.data.loc[existing_idx, 'longitude']
+            dist = self.haversine_distance(idx_lat, idx_lon, ex_lat, ex_lon)
+            min_dist = min(min_dist, dist)
+
+        return min_dist
+
+    def _fast_non_dominated_sort(self, population, objectives, violations):
+        """Fast non-dominated sorting (NSGA-II) with constraint dominance."""
         n = len(population)
         domination_count = [0] * n
         dominated_solutions = [[] for _ in range(n)]
@@ -333,9 +541,9 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
         for i in range(n):
             for j in range(n):
                 if i != j:
-                    if self.dominates(objectives[i], objectives[j]):
+                    if self.dominates(objectives[i], objectives[j], violations[i], violations[j]):
                         dominated_solutions[i].append(j)
-                    elif self.dominates(objectives[j], objectives[i]):
+                    elif self.dominates(objectives[j], objectives[i], violations[j], violations[i]):
                         domination_count[i] += 1
 
             if domination_count[i] == 0:
@@ -404,32 +612,37 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
 
     def _mutate(self, solution, k):
         """Mutation: Randomly replace one location."""
-        mutated = solution.copy()
-        idx_to_replace = random.randint(0, k-1)
+        mutated = self._fill_solution(solution.copy(), k)
+        if not mutated:
+            return mutated
+        idx_to_replace = random.randint(0, len(mutated)-1)
         available = list(set(range(len(self.data))) - set(mutated))
         if available:
             mutated[idx_to_replace] = random.choice(available)
         return mutated
 
-    def _select_next_generation(self, combined, objectives, pop_size):
+    def _select_next_generation(self, combined, objectives, violations, pop_size):
         """Select next generation from combined population."""
-        fronts = self._fast_non_dominated_sort(combined, objectives)
+        fronts = self._fast_non_dominated_sort(combined, objectives, violations)
 
         next_gen = []
         next_obj = []
+        next_violations = []
 
         for front in fronts:
             if len(next_gen) + len(front) <= pop_size:
                 next_gen.extend([combined[i] for i in front])
                 next_obj.extend([objectives[i] for i in front])
+                next_violations.extend([violations[i] for i in front])
             else:
                 # Take best from this front
                 remaining = pop_size - len(next_gen)
                 next_gen.extend([combined[i] for i in front[:remaining]])
                 next_obj.extend([objectives[i] for i in front[:remaining]])
+                next_violations.extend([violations[i] for i in front[:remaining]])
                 break
 
-        return next_gen, next_obj
+        return next_gen, next_obj, next_violations
 
 
 # Factory function

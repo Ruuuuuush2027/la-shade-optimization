@@ -107,8 +107,35 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
         self.constraints = ConstraintManager(
             spatial_config=constraint_config.get('spatial'),
             saturation_config=constraint_config.get('saturation'),
-            shade_config=constraint_config.get('shade')
+            shade_config=constraint_config.get('shade'),
+            planting_config=constraint_config.get('planting')
         )
+
+        # Threshold stages for graceful degradation (used by greedy optimization)
+        self.threshold_stages = {
+            1: {  # Preferred (current thresholds)
+                'min_temp_percentile': self.min_temp_percentile,
+                'min_population': self.min_population,
+                'max_existing_shade': self.max_existing_shade,
+                'min_sovi': self.min_sovi,
+                'min_poverty': self.min_poverty
+            },
+            2: {  # Relaxed
+                'min_temp_percentile': 60,
+                'min_population': 1000,
+                'max_existing_shade': 0.45,
+                'min_sovi': 0.3,
+                'min_poverty': 0.25
+            },
+            3: {  # Minimal
+                'min_temp_percentile': 50,
+                'min_population': 500,
+                'max_existing_shade': 0.60,
+                'min_sovi': 0.2,
+                'min_poverty': 0.15
+            }
+        }
+        self.current_threshold_stage = 1
 
         print(f"✓ Multiplicative/Hierarchical initialized")
         print(f"  Thresholds: temp>{self.temp_threshold:.1f}°C, pop>{self.min_population}, " +
@@ -116,6 +143,38 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
         print(f"  Base weights: {self.base_weights}")
         print(f"  Multipliers: heat_equity={1+self.heat_equity_bonus}x, olympic={1+self.olympic_bonus}x")
         print(f"  Region: {region}")
+
+    def _apply_threshold_stage(self, stage: int):
+        """
+        Apply thresholds for a given stage.
+
+        Args:
+            stage: Threshold stage (1=preferred, 2=relaxed, 3=minimal)
+        """
+        stage_config = self.threshold_stages[stage]
+
+        self.min_temp_percentile = stage_config['min_temp_percentile']
+        self.min_population = stage_config['min_population']
+        self.max_existing_shade = stage_config['max_existing_shade']
+        self.min_sovi = stage_config['min_sovi']
+        self.min_poverty = stage_config['min_poverty']
+
+        # Recalculate temperature threshold
+        if 'land_surface_temp_c' in self.data.columns:
+            self.temp_threshold = self.data['land_surface_temp_c'].quantile(
+                self.min_temp_percentile / 100
+            )
+
+    def set_threshold_stage(self, stage: int):
+        """
+        Set threshold stage for greedy optimization.
+
+        Args:
+            stage: Threshold stage (1=preferred, 2=relaxed, 3=minimal)
+        """
+        if stage != self.current_threshold_stage and stage in self.threshold_stages:
+            self._apply_threshold_stage(stage)
+            self.current_threshold_stage = stage
 
     def passes_thresholds(self, features: pd.Series) -> bool:
         """
@@ -247,7 +306,12 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
         # 1. Existing shade penalty (soft)
         shade_penalty = self.constraints.existing_shade.get_shade_penalty(features)
 
-        # 2. Saturation (diminishing marginal utility)
+        # 2. Planting opportunity constraint (HARD: zero reward if not plantable)
+        planting_penalty = self.constraints.planting.get_planting_penalty(features)
+        if planting_penalty == 0.0:
+            return 0.0
+
+        # 3. Saturation (diminishing marginal utility)
         self.constraints.update_state(state, self.data, self.haversine_distance)
         saturation_factor = self.constraints.saturation.get_saturation_factor(action_idx)
 
@@ -266,7 +330,7 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
             # Reapply multiplicative bonuses
             multiplicative_score = base_score_adjusted * heat_equity_multiplier * olympic_multiplier
 
-        # 3. Spatial coverage (state-dependent)
+        # 4. Spatial coverage (state-dependent)
         min_dist = self.min_distance_to_state(state, action_idx)
         coverage_score = self.constraints.spatial.coverage_efficiency_score(
             min_dist, self.region
@@ -277,7 +341,7 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
             return 0.0
 
         # Final reward
-        final_reward = multiplicative_score * shade_penalty * coverage_score
+        final_reward = multiplicative_score * shade_penalty * planting_penalty * coverage_score
 
         return np.clip(final_reward, 0, 3.0)  # Allow higher ceiling for multiplicative bonuses
 
@@ -357,6 +421,7 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
         else:
             final_reward = (multiplicative_score *
                           penalties['existing_shade_penalty'] *
+                          penalties['planting_penalty'] *
                           penalties['coverage_efficiency'])
 
         return {

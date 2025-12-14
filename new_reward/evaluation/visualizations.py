@@ -213,6 +213,7 @@ class ShadePlacementVisualizer:
                 )
 
         # Main: Shade placements (large green markers)
+        # Use .loc for label-based indexing (placements are DataFrame label indices)
         placement_lats = self.data.loc[placements, 'latitude']
         placement_lons = self.data.loc[placements, 'longitude']
 
@@ -288,6 +289,7 @@ class ShadePlacementVisualizer:
             ('dist_to_venue1', 'Distance to Olympic Venues (km)', 'Greens_r')
         ]
 
+        # Use .loc for label-based indexing (placements are DataFrame label indices)
         placement_lats = self.data.loc[placements, 'latitude']
         placement_lons = self.data.loc[placements, 'longitude']
 
@@ -554,8 +556,8 @@ class ShadePlacementVisualizer:
             'placement_coordinates': [
                 {
                     'index': idx,
-                    'latitude': float(self.data.loc[idx, 'latitude']),
-                    'longitude': float(self.data.loc[idx, 'longitude'])
+                    'latitude': float(self.data.iloc[idx]['latitude']),
+                    'longitude': float(self.data.iloc[idx]['longitude'])
                 }
                 for idx in clean_placements
             ],

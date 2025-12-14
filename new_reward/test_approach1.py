@@ -15,60 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from new_reward.approaches.approach1_weighted import EnhancedWeightedSumReward
 from new_reward.regional_filters import filter_region
 from new_reward.evaluation import ComprehensiveMetrics
-
-
-def greedy_optimization(reward_function, k: int, verbose: bool = True):
-    """
-    Greedy optimization: iteratively select best shade location.
-
-    Args:
-        reward_function: Reward function instance
-        k: Number of shades to place
-        verbose: Print progress
-
-    Returns:
-        List of selected indices
-    """
-    state = []
-    n_points = len(reward_function.data)
-
-    if verbose:
-        print(f"\nGreedy Optimization (k={k})")
-        print(f"Dataset size: {n_points} points")
-        print(f"{'='*60}\n")
-
-    for i in range(k):
-        best_idx = None
-        best_reward = -np.inf
-
-        # Try all locations not yet selected
-        for idx in range(n_points):
-            if idx in state:
-                continue
-
-            reward = reward_function.calculate_reward(state, idx)
-
-            if reward > best_reward:
-                best_reward = reward
-                best_idx = idx
-
-        if best_idx is None:
-            print(f"Warning: Could not find valid location at iteration {i+1}")
-            break
-
-        state.append(best_idx)
-
-        if verbose:
-            features = reward_function.get_features(best_idx)
-            print(f"Iteration {i+1}/{k}:")
-            print(f"  Selected index: {best_idx}")
-            print(f"  Reward: {best_reward:.4f}")
-            print(f"  Location: ({features['latitude']:.4f}, {features['longitude']:.4f})")
-            print(f"  Temp: {features.get('land_surface_temp_c', 'N/A'):.1f}°C")
-            print(f"  SOVI: {features.get('cva_sovi_score', 'N/A'):.3f}")
-            print()
-
-    return state
+from new_reward.methods.greedy import greedy_optimization
 
 
 def test_approach1_usc(k: int = 10):

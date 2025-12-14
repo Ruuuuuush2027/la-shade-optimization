@@ -1,0 +1,257 @@
+[
+  {
+    "approach": "Approach 2",
+    "method": "Greedy",
+    "k": 10,
+    "metrics": {
+      "heat_sum": 502.7139148114787,
+      "socio_sum": 29.830000000000002,
+      "public_access": 1.7582847995042838,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 0.0,
+      "equity_gini": 0.8516733079766832,
+      "spatial_efficiency": 2.4652118252069,
+      "population_served": 1237772.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "Greedy",
+    "k": 20,
+    "metrics": {
+      "heat_sum": 997.0827230014468,
+      "socio_sum": 59.86,
+      "public_access": 1.7589059572735326,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 0.0,
+      "equity_gini": 0.7303573781963595,
+      "spatial_efficiency": 2.696088684018348,
+      "population_served": 2117586.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "Greedy",
+    "k": 50,
+    "metrics": {
+      "heat_sum": 2468.9308874007556,
+      "socio_sum": 143.34,
+      "public_access": 1.8843488828940154,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 55.55555555555556,
+      "equity_gini": 0.47490076804107906,
+      "spatial_efficiency": 2.8189650375406714,
+      "population_served": 3799341.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "Greedy",
+    "k": 100,
+    "metrics": {
+      "heat_sum": 2565.7618365638837,
+      "socio_sum": 147.09,
+      "public_access": 1.8921383642597571,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 55.55555555555556,
+      "equity_gini": 0.45941546321173354,
+      "spatial_efficiency": 2.8545643718392695,
+      "population_served": 3879498.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "Greedy",
+    "k": 200,
+    "metrics": {
+      "heat_sum": 2565.7618365638837,
+      "socio_sum": 147.09,
+      "public_access": 1.8921383642597571,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 55.55555555555556,
+      "equity_gini": 0.45941546321173354,
+      "spatial_efficiency": 2.8545643718392695,
+      "population_served": 3879498.0
+    }
+  },
+  {
+    "approach": "Approach 3",
+    "method": "Greedy",
+    "k": 10,
+    "metrics": {
+      "heat_sum": 488.4946920490688,
+      "socio_sum": 71.38,
+      "public_access": 1.8965944890450228,
+      "close_pairs_500m": 13.0,
+      "olympic_coverage": 22.22222222222222,
+      "equity_gini": 0.9571296335240711,
+      "spatial_efficiency": 2.603348683381883,
+      "population_served": 438865.0
+    }
+  },
+  {
+    "approach": "Approach 3",
+    "method": "Greedy",
+    "k": 20,
+    "metrics": {
+      "heat_sum": 975.7119603957261,
+      "socio_sum": 141.88,
+      "public_access": 1.906414567920963,
+      "close_pairs_500m": 51.0,
+      "olympic_coverage": 33.333333333333336,
+      "equity_gini": 0.941861973052692,
+      "spatial_efficiency": 2.4511752390998276,
+      "population_served": 670024.0
+    }
+  },
+  {
+    "approach": "Approach 3",
+    "method": "Greedy",
+    "k": 50,
+    "metrics": {
+      "heat_sum": 2427.5730670389185,
+      "socio_sum": 328.87000000000006,
+      "public_access": 2.0722270049627465,
+      "close_pairs_500m": 228.0,
+      "olympic_coverage": 66.66666666666667,
+      "equity_gini": 0.9014287509068617,
+      "spatial_efficiency": 2.4829101981525508,
+      "population_served": 1175814.0
+    }
+  },
+  {
+    "approach": "Approach 3",
+    "method": "Greedy",
+    "k": 100,
+    "metrics": {
+      "heat_sum": 4825.682593765183,
+      "socio_sum": 565.95,
+      "public_access": 2.127479894148862,
+      "close_pairs_500m": 478.0,
+      "olympic_coverage": 88.88888888888889,
+      "equity_gini": 0.7947034827114667,
+      "spatial_efficiency": 2.6074912965442283,
+      "population_served": 2624445.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "NSGA-II",
+    "k": 10,
+    "metrics": {
+      "heat_sum": 502.7139148114787,
+      "socio_sum": 29.830000000000002,
+      "public_access": 1.7582847995042838,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 0.0,
+      "equity_gini": 0.8516733079766832,
+      "spatial_efficiency": 2.4652118252069,
+      "population_served": 1237772.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "NSGA-II",
+    "k": 20,
+    "metrics": {
+      "heat_sum": 997.0827230014468,
+      "socio_sum": 59.86,
+      "public_access": 1.7589059572735326,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 0.0,
+      "equity_gini": 0.7303573781963595,
+      "spatial_efficiency": 2.696088684018348,
+      "population_served": 2117586.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "NSGA-II",
+    "k": 50,
+    "metrics": {
+      "heat_sum": 2468.9308874007556,
+      "socio_sum": 143.34,
+      "public_access": 1.8843488828940154,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 55.55555555555556,
+      "equity_gini": 0.47490076804107906,
+      "spatial_efficiency": 2.8189650375406714,
+      "population_served": 3799341.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "NSGA-II",
+    "k": 100,
+    "metrics": {
+      "heat_sum": 2565.7618365638837,
+      "socio_sum": 147.09,
+      "public_access": 1.8921383642597571,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 55.55555555555556,
+      "equity_gini": 0.45941546321173354,
+      "spatial_efficiency": 2.8545643718392695,
+      "population_served": 3879498.0
+    }
+  },
+  {
+    "approach": "Approach 2",
+    "method": "NSGA-II",
+    "k": 200,
+    "metrics": {
+      "heat_sum": 2565.7618365638837,
+      "socio_sum": 147.09,
+      "public_access": 1.8921383642597571,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 55.55555555555556,
+      "equity_gini": 0.45941546321173354,
+      "spatial_efficiency": 2.8545643718392695,
+      "population_served": 3879498.0
+    }
+  },
+  {
+    "approach": "Approach 3",
+    "method": "NSGA-II",
+    "k": 10,
+    "metrics": {
+      "heat_sum": 490.1760665185722,
+      "socio_sum": 30.9,
+      "public_access": 1.8796453401591078,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 0.0,
+      "equity_gini": 0.8733299093659468,
+      "spatial_efficiency": 3.5680951214370435,
+      "population_served": 1059577.0
+    }
+  },
+  {
+    "approach": "Approach 3",
+    "method": "NSGA-II",
+    "k": 20,
+    "metrics": {
+      "heat_sum": 972.8430231526534,
+      "socio_sum": 44.12,
+      "public_access": 1.976364286027457,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 11.11111111111111,
+      "equity_gini": 0.7441754988844074,
+      "spatial_efficiency": 3.2821233674360486,
+      "population_served": 2201291.0
+    }
+  },
+  {
+    "approach": "Approach 3",
+    "method": "NSGA-II",
+    "k": 50,
+    "metrics": {
+      "heat_sum": 2420.366416232758,
+      "socio_sum": 97.1,
+      "public_access": 1.9738913367197506,
+      "close_pairs_500m": 0.0,
+      "olympic_coverage": 88.88888888888889,
+      "equity_gini": 0.38402361786744144,
+      "spatial_efficiency": 3.104519301953531,
+      "population_served": 4516841.0
+    }
+  }
+]

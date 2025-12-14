@@ -232,6 +232,80 @@ class ExistingShadeConstraint:
         return self.sorted_thresholds[-1][1]
 
 
+class PlantingOpportunityConstraint:
+    """
+    Enforces tree plantability constraint - only allows placement in viable locations.
+
+    Uses the planting_opportunity field to determine if a location is suitable
+    for tree planting based on infrastructure, vacant space, and site conditions.
+    """
+
+    def __init__(self,
+                 field_name: str = 'planting_opportunity',
+                 min_threshold: float = 4.0,
+                 use_hard_constraint: bool = True):
+        """
+        Initialize planting opportunity constraint.
+
+        Args:
+            field_name: Column name for planting opportunity score
+                       'planting_opportunity' for simple_features (range: 1.3-35)
+                       'access_planting_opportunity' for features (range: 0-1)
+            min_threshold: Minimum threshold for plantability
+                          For planting_opportunity: 4.0 is reasonable (around mean, top ~32%)
+                          For access_planting_opportunity: 0.05-0.1 is reasonable
+            use_hard_constraint: If True, non-plantable locations get 0 reward (hard constraint)
+                                If False, apply soft penalty based on score
+        """
+        self.field_name = field_name
+        self.min_threshold = min_threshold
+        self.use_hard_constraint = use_hard_constraint
+
+    def is_plantable(self, features: pd.Series) -> bool:
+        """
+        Check if a location is plantable.
+
+        Args:
+            features: Feature vector for the location
+
+        Returns:
+            True if location meets planting opportunity threshold
+        """
+        if self.field_name not in features.index:
+            # If field missing, assume plantable (backward compatibility)
+            return True
+
+        planting_score = features[self.field_name]
+        return planting_score > self.min_threshold
+
+    def get_planting_penalty(self, features: pd.Series) -> float:
+        """
+        Calculate penalty based on planting opportunity.
+
+        Args:
+            features: Feature vector for the location
+
+        Returns:
+            Penalty multiplier:
+            - 0.0 if not plantable and hard constraint enabled
+            - planting_score if soft constraint (proportional to opportunity)
+            - 1.0 if plantable
+        """
+        if self.field_name not in features.index:
+            # No planting data - no penalty
+            return 1.0
+
+        planting_score = features[self.field_name]
+
+        if self.use_hard_constraint:
+            # Hard constraint: zero reward if not plantable
+            return 1.0 if planting_score > self.min_threshold else 0.0
+        else:
+            # Soft constraint: scale reward by planting opportunity
+            # Normalize to [0, 1] assuming reasonable max value
+            return min(1.0, max(0.0, planting_score))
+
+
 class ConstraintManager:
     """
     Manager class that coordinates all constraints.
@@ -242,7 +316,8 @@ class ConstraintManager:
     def __init__(self,
                  spatial_config: Optional[Dict] = None,
                  saturation_config: Optional[Dict] = None,
-                 shade_config: Optional[Dict] = None):
+                 shade_config: Optional[Dict] = None,
+                 planting_config: Optional[Dict] = None):
         """
         Initialize constraint manager.
 
@@ -250,10 +325,12 @@ class ConstraintManager:
             spatial_config: Config for SpatialConstraints
             saturation_config: Config for ShadeSaturation
             shade_config: Config for ExistingShadeConstraint
+            planting_config: Config for PlantingOpportunityConstraint
         """
         self.spatial = SpatialConstraints(**(spatial_config or {}))
         self.saturation = ShadeSaturation(**(saturation_config or {}))
         self.existing_shade = ExistingShadeConstraint(**(shade_config or {}))
+        self.planting = PlantingOpportunityConstraint(**(planting_config or {}))
 
     def update_state(self, state: List[int], data: pd.DataFrame, haversine_func):
         """
@@ -290,5 +367,6 @@ class ConstraintManager:
                 min_distance, region
             ),
             'saturation_factor': self.saturation.get_saturation_factor(action_idx),
-            'existing_shade_penalty': self.existing_shade.get_shade_penalty(features)
+            'existing_shade_penalty': self.existing_shade.get_shade_penalty(features),
+            'planting_penalty': self.planting.get_planting_penalty(features)
         }

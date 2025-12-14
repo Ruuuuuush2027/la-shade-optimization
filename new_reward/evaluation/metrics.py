@@ -91,7 +91,7 @@ class ComprehensiveMetrics:
         if 'land_surface_temp_c' not in self.data.columns:
             return 0.0
 
-        temps = self.data.loc[self.placements, 'land_surface_temp_c']
+        temps = self.data.iloc[self.placements]['land_surface_temp_c']
         return temps.sum()
 
     def socio_sum(self) -> float:
@@ -106,7 +106,7 @@ class ComprehensiveMetrics:
         if 'cva_sovi_score' not in self.data.columns:
             return 0.0
 
-        sovi = self.data.loc[self.placements, 'cva_sovi_score']
+        sovi = self.data.iloc[self.placements]['cva_sovi_score']
         return sovi.sum()
 
     def public_access(self) -> float:
@@ -122,12 +122,12 @@ class ComprehensiveMetrics:
 
         # Cooling centers
         if 'dist_to_ac_1' in self.data.columns:
-            cooling = self.data.loc[self.placements, 'dist_to_ac_1'].mean()
+            cooling = self.data.iloc[self.placements]['dist_to_ac_1'].mean()
             distances.append(cooling)
 
         # Hydration stations
         if 'dist_to_hydro_1' in self.data.columns:
-            hydration = self.data.loc[self.placements, 'dist_to_hydro_1'].mean()
+            hydration = self.data.iloc[self.placements]['dist_to_hydro_1'].mean()
             distances.append(hydration)
 
         # Transit (bus + metro average)
@@ -136,7 +136,7 @@ class ComprehensiveMetrics:
         available_transit = [col for col in transit_cols if col in self.data.columns]
 
         if available_transit:
-            transit = self.data.loc[self.placements, available_transit].mean().mean()
+            transit = self.data.iloc[self.placements][available_transit].mean().mean()
             distances.append(transit)
 
         if not distances:
@@ -156,12 +156,12 @@ class ComprehensiveMetrics:
         count = 0
 
         for i, idx1 in enumerate(self.placements):
-            lat1 = self.data.loc[idx1, 'latitude']
-            lon1 = self.data.loc[idx1, 'longitude']
+            lat1 = self.data.iloc[idx1]['latitude']
+            lon1 = self.data.iloc[idx1]['longitude']
 
             for idx2 in self.placements[i+1:]:
-                lat2 = self.data.loc[idx2, 'latitude']
-                lon2 = self.data.loc[idx2, 'longitude']
+                lat2 = self.data.iloc[idx2]['latitude']
+                lon2 = self.data.iloc[idx2]['longitude']
 
                 dist = self.haversine_distance(lat1, lon1, lat2, lon2)
 
@@ -227,8 +227,8 @@ class ComprehensiveMetrics:
 
                 # Check if any shade within 500m
                 for shade_idx in self.placements:
-                    shade_lat = self.data.loc[shade_idx, 'latitude']
-                    shade_lon = self.data.loc[shade_idx, 'longitude']
+                    shade_lat = self.data.iloc[shade_idx]['latitude']
+                    shade_lon = self.data.iloc[shade_idx]['longitude']
                     point_lat = olympic_area.loc[idx, 'latitude']
                     point_lon = olympic_area.loc[idx, 'longitude']
 
@@ -259,8 +259,8 @@ class ComprehensiveMetrics:
                 venue_lon = venue_points.loc[idx, 'longitude']
 
                 for shade_idx in self.placements:
-                    shade_lat = self.data.loc[shade_idx, 'latitude']
-                    shade_lon = self.data.loc[shade_idx, 'longitude']
+                    shade_lat = self.data.iloc[shade_idx]['latitude']
+                    shade_lon = self.data.iloc[shade_idx]['longitude']
 
                     dist = self.haversine_distance(shade_lat, shade_lon, venue_lat, venue_lon)
 
@@ -289,13 +289,13 @@ class ComprehensiveMetrics:
         point_benefits = np.zeros(len(self.data))
 
         for shade_idx in self.placements:
-            shade_lat = self.data.loc[shade_idx, 'latitude']
-            shade_lon = self.data.loc[shade_idx, 'longitude']
+            shade_lat = self.data.iloc[shade_idx]['latitude']
+            shade_lon = self.data.iloc[shade_idx]['longitude']
 
             # Calculate benefit for all points based on distance
-            for idx in self.data.index:
-                point_lat = self.data.loc[idx, 'latitude']
-                point_lon = self.data.loc[idx, 'longitude']
+            for idx in range(len(self.data)):
+                point_lat = self.data.iloc[idx]['latitude']
+                point_lon = self.data.iloc[idx]['longitude']
 
                 dist = self.haversine_distance(shade_lat, shade_lon, point_lat, point_lon)
 
@@ -335,12 +335,12 @@ class ComprehensiveMetrics:
         distances = []
 
         for i, idx1 in enumerate(self.placements):
-            lat1 = self.data.loc[idx1, 'latitude']
-            lon1 = self.data.loc[idx1, 'longitude']
+            lat1 = self.data.iloc[idx1]['latitude']
+            lon1 = self.data.iloc[idx1]['longitude']
 
             for idx2 in self.placements[i+1:]:
-                lat2 = self.data.loc[idx2, 'latitude']
-                lon2 = self.data.loc[idx2, 'longitude']
+                lat2 = self.data.iloc[idx2]['latitude']
+                lon2 = self.data.iloc[idx2]['longitude']
 
                 dist = self.haversine_distance(lat1, lon1, lat2, lon2)
                 distances.append(dist)
@@ -362,18 +362,18 @@ class ComprehensiveMetrics:
         served_population = 0.0
 
         # For each grid point, check if within shade radius of any placement
-        for idx in self.data.index:
-            point_lat = self.data.loc[idx, 'latitude']
-            point_lon = self.data.loc[idx, 'longitude']
-            pop = self.data.loc[idx, 'cva_population']
+        for idx in range(len(self.data)):
+            point_lat = self.data.iloc[idx]['latitude']
+            point_lon = self.data.iloc[idx]['longitude']
+            pop = self.data.iloc[idx]['cva_population']
 
             if pd.isna(pop):
                 continue
 
             # Check distance to each shade
             for shade_idx in self.placements:
-                shade_lat = self.data.loc[shade_idx, 'latitude']
-                shade_lon = self.data.loc[shade_idx, 'longitude']
+                shade_lat = self.data.iloc[shade_idx]['latitude']
+                shade_lon = self.data.iloc[shade_idx]['longitude']
 
                 dist = self.haversine_distance(shade_lat, shade_lon, point_lat, point_lon)
 
