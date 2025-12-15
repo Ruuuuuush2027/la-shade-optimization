@@ -4,97 +4,97 @@
     "approach": "Approach3",
     "method": "NSGA-II",
     "k": 10,
-    "timestamp": "2025-12-11T10:47:15.116745",
-    "elapsed_seconds": 5920.325193405151,
+    "timestamp": "2025-12-13T22:19:41.438626",
+    "elapsed_seconds": 5368.847385644913,
     "planting_constraint": {
-      "field": "planting_opportunity",
-      "threshold": 2.0,
-      "enabled": true
+      "field": "access_planting_opportunity",
+      "threshold": 0.0,
+      "hard_constraint": false
     }
   },
   "placements": [
-    221,
-    1144,
-    1050,
-    104,
-    587,
-    191,
-    639,
-    419,
-    421,
-    907
+    110,
+    974,
+    1002,
+    103,
+    658,
+    506,
+    557,
+    86,
+    1017,
+    403
   ],
   "placement_coordinates": [
     {
-      "index": 221,
-      "latitude": 34.00533681017172,
-      "longitude": -118.29845708235771,
-      "planting_opportunity": 3.40997055447433
+      "index": 110,
+      "latitude": 34.00099490508586,
+      "longitude": -118.3071879540133,
+      "planting_opportunity": 0.5295308826812458
     },
     {
-      "index": 1144,
-      "latitude": 34.04296665424916,
-      "longitude": -118.2757568160532,
-      "planting_opportunity": 3.961455712235996
-    },
-    {
-      "index": 1050,
+      "index": 974,
       "latitude": 34.04007205085859,
-      "longitude": -118.317665,
-      "planting_opportunity": 3.329598074490621
+      "longitude": -118.26004124707312,
+      "planting_opportunity": 0.0593533050248288
     },
     {
-      "index": 104,
+      "index": 1002,
+      "latitude": 34.04296665424916,
+      "longitude": -118.317665,
+      "planting_opportunity": 0.5984174847396782
+    },
+    {
+      "index": 103,
       "latitude": 33.999547603390575,
       "longitude": -118.25829507274202,
-      "planting_opportunity": 2.789364049057118
+      "planting_opportunity": 0.2158001731983538
     },
     {
-      "index": 587,
+      "index": 658,
+      "latitude": 34.02559903390573,
+      "longitude": -118.29321855936436,
+      "planting_opportunity": 0.237319436098206
+    },
+    {
+      "index": 506,
+      "latitude": 34.018362525429296,
+      "longitude": -118.31068030267554,
+      "planting_opportunity": 0.0595329170507269
+    },
+    {
+      "index": 557,
       "latitude": 34.01980982712458,
-      "longitude": -118.27051829305984,
-      "planting_opportunity": 2.073302689396237
+      "longitude": -118.26004124707312,
+      "planting_opportunity": 0.1928038861072823
     },
     {
-      "index": 191,
-      "latitude": 34.00388950847643,
-      "longitude": -118.28972621070211,
-      "planting_opportunity": 3.2307910176041155
+      "index": 86,
+      "latitude": 33.999547603390575,
+      "longitude": -118.287980036371,
+      "planting_opportunity": 0.5634049626306572
     },
     {
-      "index": 639,
-      "latitude": 34.022704430515155,
-      "longitude": -118.30194943101996,
-      "planting_opportunity": 2.411478917595259
+      "index": 1017,
+      "latitude": 34.04296665424916,
+      "longitude": -118.2862338620399,
+      "planting_opportunity": 0.138946951734599
     },
     {
-      "index": 419,
+      "index": 403,
       "latitude": 34.01257331864815,
-      "longitude": -118.25829507274202,
-      "planting_opportunity": 2.6413209118804333
-    },
-    {
-      "index": 421,
-      "latitude": 34.01402062034344,
-      "longitude": -118.31591882566887,
-      "planting_opportunity": 2.7728696600196896
-    },
-    {
-      "index": 907,
-      "latitude": 34.03283554238216,
-      "longitude": -118.26178742140424,
-      "planting_opportunity": 2.091720075848792
+      "longitude": -118.2757568160532,
+      "planting_opportunity": 0.1024988453874062
     }
   ],
   "metrics": {
-    "heat_sum": 490.1760665185722,
-    "socio_sum": 30.9,
-    "public_access": 1.8796453401591078,
+    "heat_sum": 487.8982280636023,
+    "socio_sum": 19.389999999999997,
+    "public_access": 1.938350987550968,
     "close_pairs_500m": 0.0,
     "olympic_coverage": 0.0,
-    "equity_gini": 0.8733299093659468,
-    "spatial_efficiency": 3.5680951214370435,
-    "population_served": 1059577.0
+    "equity_gini": 0.8645736329139599,
+    "spatial_efficiency": 3.71348310321953,
+    "population_served": 1092687.0
   },
   "pareto_front": {
     "front_size": 100,

@@ -49,6 +49,8 @@ import matplotlib.pyplot as plt
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from new_reward.utils.planting import detect_planting_settings
+
 
 def parse_args():
     """Parse command-line arguments."""
@@ -104,7 +106,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def create_reward_function(data_df, approach, region):
+def create_reward_function(data_df, approach, region, planting_settings=None):
     """
     Create appropriate reward function with planting constraints.
 
@@ -116,14 +118,23 @@ def create_reward_function(data_df, approach, region):
     Returns:
         Reward function instance
     """
+    if planting_settings is None:
+        planting_settings = detect_planting_settings(data_df)
+
+    planting_constraint = {
+        'field_name': planting_settings.get('field_name'),
+        'min_threshold': planting_settings.get('min_threshold', 0.0),
+        'use_hard_constraint': planting_settings.get('use_hard_constraint', True)
+    }
+
     # Common config with planting constraint
     config = {
         'constraints': {
-            'planting': {
-                'field_name': 'planting_opportunity',
-                'min_threshold': 4.0,
-                'use_hard_constraint': True
-            }
+            'planting': planting_constraint
+        },
+        'planting_priority': {
+            'weight': planting_settings.get('priority_weight', 0.0),
+            'field_name': planting_settings.get('field_name')
         }
     }
 
@@ -158,7 +169,8 @@ def run_optimizer(reward_func, k, approach, verbose):
     return greedy_optimization(reward_func, k, verbose=verbose)
 
 
-def save_results_json(placements, data, metrics, output_dir, region, approach, k, elapsed):
+def save_results_json(placements, data, metrics, output_dir, region, approach, k, elapsed,
+                      planting_settings=None):
     """
     Save placements and metrics to JSON.
 
@@ -178,13 +190,21 @@ def save_results_json(placements, data, metrics, output_dir, region, approach, k
     # Build coordinate list with planting scores
     # Note: placements contains DataFrame label indices, not positional indices
     placement_coords = []
+    planting_field = None
+    if planting_settings:
+        planting_field = planting_settings.get('field_name')
+
     for idx in placements:
         row = data.loc[idx]  # Use .loc for label-based indexing
+        planting_value = None
+        if planting_field and planting_field in row:
+            planting_value = float(row[planting_field])
+
         placement_coords.append({
             'index': int(idx),
             'latitude': float(row['latitude']),
             'longitude': float(row['longitude']),
-            'planting_opportunity': float(row['planting_opportunity']) if 'planting_opportunity' in row else None
+            'planting_opportunity': planting_value
         })
 
     result = {
@@ -196,10 +216,10 @@ def save_results_json(placements, data, metrics, output_dir, region, approach, k
             'timestamp': datetime.now().isoformat(),
             'elapsed_seconds': float(elapsed),
             'planting_constraint': {
-                'field': 'planting_opportunity',
-                'threshold': 2.0,
-                'enabled': True
-            }
+                'field': planting_field,
+                'threshold': (planting_settings or {}).get('min_threshold', 0.0),
+                'hard_constraint': (planting_settings or {}).get('use_hard_constraint', False)
+            } if planting_settings else None
         },
         'placements': [int(idx) for idx in placements],
         'placement_coordinates': placement_coords,
@@ -315,12 +335,6 @@ def main():
     data = pd.read_csv(data_path)
     print(f"✓ Loaded {len(data)} locations")
 
-    # Check for planting_opportunity field
-    if 'planting_opportunity' not in data.columns:
-        print("\n✗ ERROR: 'planting_opportunity' field not found in data")
-        print("  Please use shade_optimization_data_usc_simple_features.csv")
-        sys.exit(1)
-
     # Filter by region (or use all data)
     if args.region == 'All':
         region_data = data
@@ -330,14 +344,26 @@ def main():
         region_data = filter_region(data, args.region)
         print(f"✓ Region {args.region}: {len(region_data)} locations")
 
-    # Check plantable locations
-    plantable = region_data[region_data['planting_opportunity'] > 2.0]
-    print(f"✓ Plantable locations (score > 2.0): {len(plantable)} "
-          f"({len(plantable)/len(region_data)*100:.1f}%)")
+    planting_settings = detect_planting_settings(region_data)
+    planting_field = planting_settings.get('field_name')
+    planting_threshold = planting_settings.get('min_threshold', 0.0)
+
+    if planting_field and planting_field in region_data.columns:
+        plantable = region_data[region_data[planting_field] > planting_threshold]
+        print(f"✓ Plantable locations ({planting_field} > {planting_threshold}): {len(plantable)} "
+              f"({len(plantable)/len(region_data)*100:.1f}%)")
+    else:
+        print("✓ No explicit planting opportunity field detected; treating all locations as plantable")
+
+    if planting_field and planting_field != 'planting_opportunity':
+        print(f"⚠ Dataset planting field '{planting_field}' differs from default 'planting_opportunity'. "
+              f"Verify any downstream tools that expect the default field still work.")
 
     # Create reward function
     print(f"\nInitializing Approach {args.approach} reward function...")
-    reward_func = create_reward_function(region_data, args.approach, args.region)
+    reward_func = create_reward_function(
+        region_data, args.approach, args.region, planting_settings=planting_settings
+    )
     print(f"✓ Reward function initialized with planting constraints")
 
     # Parse k values
@@ -372,16 +398,21 @@ def main():
             print(f"✓ Optimization complete: {elapsed:.1f}s")
             print(f"  Placed {len(placements)} shades")
 
-            # Verify all placements are plantable
-            non_plantable = []
-            for idx in placements:
-                if region_data.loc[idx, 'planting_opportunity'] <= 2.0:
-                    non_plantable.append(idx)
+            enforce_threshold = planting_settings.get('use_hard_constraint', False)
+            if planting_field and enforce_threshold:
+                non_plantable = []
+                for idx in placements:
+                    if region_data.loc[idx, planting_field] <= planting_threshold:
+                        non_plantable.append(idx)
 
-            if non_plantable:
-                print(f"  ⚠ WARNING: {len(non_plantable)} placements have low planting opportunity!")
+                if non_plantable:
+                    print(f"  ⚠ WARNING: {len(non_plantable)} placements fall below {planting_field} threshold!")
+                else:
+                    print(f"  ✓ All placements meet the {planting_field} threshold")
+            elif planting_field:
+                print(f"  ✓ Planting opportunity ({planting_field}) used as soft priority (no hard threshold)")
             else:
-                print(f"  ✓ All placements meet planting opportunity threshold")
+                print(f"  ✓ No planting opportunity field available; skipping validation")
 
         except Exception as e:
             print(f"\n✗ ERROR during optimization: {e}")
@@ -407,7 +438,8 @@ def main():
         try:
             json_path = save_results_json(
                 placements, region_data, metrics,
-                output_dir, args.region, args.approach, k, elapsed
+                output_dir, args.region, args.approach, k, elapsed,
+                planting_settings=planting_settings
             )
             print(f"✓ Saved JSON: {json_path}")
         except Exception as e:

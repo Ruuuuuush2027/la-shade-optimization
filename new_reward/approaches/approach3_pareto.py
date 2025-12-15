@@ -64,9 +64,12 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
         planting_config = constraints_config.get('planting', {})
         spatial_config = constraints_config.get('spatial', {})
 
-        # Planting opportunity constraint
+        # Planting opportunity constraint / priority
         self.planting_threshold = planting_config.get('min_threshold', 2.0)
-        self.planting_field = planting_config.get('field_name', 'planting_opportunity')
+        default_field = 'planting_opportunity' if 'planting_opportunity' in self.data.columns else None
+        self.planting_field = planting_config.get('field_name', default_field)
+        if self.planting_field is None and default_field is not None:
+            self.planting_field = default_field
 
         # Spatial distance constraint
         self.hard_minimum_km = spatial_config.get('min_distance_km', 0.5)
@@ -131,6 +134,13 @@ class ParetoMultiObjectiveReward(BaseRewardFunction):
 
         # Objective 5: Population Served (total within 500m)
         objectives['population_served'] = self._calculate_population_served(placements)
+
+        # Objective 6: Planting Opportunity Priority
+        if self.planting_field and self.planting_field in self.data.columns:
+            planting_vals = self.data.loc[placements, self.planting_field].fillna(0.0)
+            objectives['planting_priority'] = planting_vals.sum()
+        else:
+            objectives['planting_priority'] = 0.0
 
         return objectives
 

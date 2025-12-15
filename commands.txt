@@ -1,0 +1,14 @@
+# Terminal 1 (or tmux session 1)
+cd /home/fhliang/projects/libero_shade/new_reward
+./run_approach2.sh
+
+# Terminal 2 (or tmux session 2)
+cd /home/fhliang/projects/libero_shade/new_reward
+./run_approach3.sh
+
+./run_nsga2_approach3.sh
+
+
+tmux attach -t greedy_2
+tmux attach -t greedy_3
+tmux attach -t nsga_3

@@ -4,167 +4,167 @@
     "approach": "Approach3",
     "method": "NSGA-II",
     "k": 20,
-    "timestamp": "2025-12-11T13:40:21.554623",
-    "elapsed_seconds": 10381.414932250977,
+    "timestamp": "2025-12-14T00:55:49.510059",
+    "elapsed_seconds": 9363.597738742828,
     "planting_constraint": {
-      "field": "planting_opportunity",
-      "threshold": 2.0,
-      "enabled": true
+      "field": "access_planting_opportunity",
+      "threshold": 0.0,
+      "hard_constraint": false
     }
   },
   "placements": [
-    417,
-    1015,
-    2,
-    1108,
-    469,
-    20,
-    561,
-    838,
-    1131,
-    31,
-    723,
-    779,
-    11,
+    470,
+    976,
+    37,
+    1021,
+    570,
+    89,
+    33,
+    859,
+    617,
+    956,
+    696,
     372,
-    322,
-    892,
-    165,
-    226,
-    1119,
-    588
+    219,
+    386,
+    580,
+    744,
+    847,
+    397,
+    131,
+    1024
   ],
   "placement_coordinates": [
     {
-      "index": 417,
-      "latitude": 34.01257331864815,
-      "longitude": -118.26178742140424,
-      "planting_opportunity": 4.201437657001449
-    },
-    {
-      "index": 1015,
-      "latitude": 34.038624749163304,
-      "longitude": -118.317665,
-      "planting_opportunity": 5.10677179027966
-    },
-    {
-      "index": 2,
-      "latitude": 33.996653,
-      "longitude": -118.31417265133776,
-      "planting_opportunity": 4.559913819154372
-    },
-    {
-      "index": 1108,
-      "latitude": 34.04151935255388,
-      "longitude": -118.2775029903843,
-      "planting_opportunity": 8.273959476775156
-    },
-    {
-      "index": 469,
+      "index": 470,
       "latitude": 34.015467922038724,
-      "longitude": -118.29321855936436,
-      "planting_opportunity": 4.037101797242005
+      "longitude": -118.25829507274202,
+      "planting_opportunity": 0.246996263252357
     },
     {
-      "index": 20,
-      "latitude": 33.996653,
-      "longitude": -118.28274151337766,
-      "planting_opportunity": 4.057053034840536
+      "index": 976,
+      "latitude": 34.04151935255388,
+      "longitude": -118.317665,
+      "planting_opportunity": 0.4284121519166938
     },
     {
-      "index": 561,
-      "latitude": 34.01980982712458,
-      "longitude": -118.31591882566887,
-      "planting_opportunity": 2.5271144540624544
+      "index": 37,
+      "latitude": 33.99810030169529,
+      "longitude": -118.31242647700664,
+      "planting_opportunity": 0.3003798646986205
     },
     {
-      "index": 838,
-      "latitude": 34.02994093899159,
-      "longitude": -118.26004124707312,
-      "planting_opportunity": 2.545433913355758
-    },
-    {
-      "index": 1131,
+      "index": 1021,
       "latitude": 34.04296665424916,
-      "longitude": -118.29845708235771,
-      "planting_opportunity": 5.049435946097568
+      "longitude": -118.27924916471542,
+      "planting_opportunity": 0.0779452833377514
     },
     {
-      "index": 31,
+      "index": 570,
+      "latitude": 34.02125712881987,
+      "longitude": -118.2967109080266,
+      "planting_opportunity": 0.1262150288553054
+    },
+    {
+      "index": 89,
+      "latitude": 33.999547603390575,
+      "longitude": -118.28274151337766,
+      "planting_opportunity": 0.2628026225855987
+    },
+    {
+      "index": 33,
       "latitude": 33.996653,
-      "longitude": -118.26353359573535,
-      "planting_opportunity": 8.645315590540653
+      "longitude": -118.25829507274202,
+      "planting_opportunity": 0.5468930864954981
     },
     {
-      "index": 723,
-      "latitude": 34.02559903390573,
-      "longitude": -118.2775029903843,
-      "planting_opportunity": 2.4570016939579333
+      "index": 859,
+      "latitude": 34.034282844077445,
+      "longitude": -118.26004124707312,
+      "planting_opportunity": 0.1988453494618719
     },
     {
-      "index": 779,
-      "latitude": 34.0284936372963,
-      "longitude": -118.30194943101996,
-      "planting_opportunity": 8.565440962448857
+      "index": 617,
+      "latitude": 34.02415173221044,
+      "longitude": -118.317665,
+      "planting_opportunity": 0.0495519985363289
     },
     {
-      "index": 11,
-      "latitude": 33.996653,
+      "index": 956,
+      "latitude": 34.04007205085859,
       "longitude": -118.29845708235771,
-      "planting_opportunity": 4.612647872784937
+      "planting_opportunity": 0.0490262506124606
+    },
+    {
+      "index": 696,
+      "latitude": 34.027046335601014,
+      "longitude": -118.27924916471542,
+      "planting_opportunity": 0.1356232833656371
     },
     {
       "index": 372,
       "latitude": 34.011126016952865,
-      "longitude": -118.27924916471542,
-      "planting_opportunity": 2.179704566264084
-    },
-    {
-      "index": 322,
-      "latitude": 34.00967871525758,
-      "longitude": -118.30544177968218,
-      "planting_opportunity": 4.503580960501156
-    },
-    {
-      "index": 892,
-      "latitude": 34.03283554238216,
-      "longitude": -118.287980036371,
-      "planting_opportunity": 4.099544129096246
-    },
-    {
-      "index": 165,
-      "latitude": 34.00244220678115,
       "longitude": -118.27401064172209,
-      "planting_opportunity": 2.7855524302373267
+      "planting_opportunity": 0.0746378755504797
     },
     {
-      "index": 226,
+      "index": 219,
       "latitude": 34.00533681017172,
-      "longitude": -118.28972621070211,
-      "planting_opportunity": 2.8538968689954327
+      "longitude": -118.29845708235771,
+      "planting_opportunity": 0.4013861025234272
     },
     {
-      "index": 1119,
-      "latitude": 34.04151935255388,
-      "longitude": -118.25829507274202,
-      "planting_opportunity": 2.0734463895597
+      "index": 386,
+      "latitude": 34.01257331864815,
+      "longitude": -118.31068030267554,
+      "planting_opportunity": 0.1432712597896325
     },
     {
-      "index": 588,
-      "latitude": 34.01980982712458,
+      "index": 580,
+      "latitude": 34.02125712881987,
       "longitude": -118.26877211872872,
-      "planting_opportunity": 2.60461185186609
+      "planting_opportunity": 0.2295043494717808
+    },
+    {
+      "index": 744,
+      "latitude": 34.02994093899159,
+      "longitude": -118.3071879540133,
+      "planting_opportunity": 0.090321478589271
+    },
+    {
+      "index": 847,
+      "latitude": 34.034282844077445,
+      "longitude": -118.287980036371,
+      "planting_opportunity": 0.0457945221466931
+    },
+    {
+      "index": 397,
+      "latitude": 34.01257331864815,
+      "longitude": -118.28972621070211,
+      "planting_opportunity": 0.503381432617459
+    },
+    {
+      "index": 131,
+      "latitude": 34.00099490508586,
+      "longitude": -118.27051829305984,
+      "planting_opportunity": 0.6353406178014744
+    },
+    {
+      "index": 1024,
+      "latitude": 34.04296665424916,
+      "longitude": -118.26527977006648,
+      "planting_opportunity": 0.0267431833395513
     }
   ],
   "metrics": {
-    "heat_sum": 972.8430231526534,
-    "socio_sum": 44.12,
-    "public_access": 1.976364286027457,
+    "heat_sum": 970.7795437625867,
+    "socio_sum": 40.83,
+    "public_access": 1.9683271800193318,
     "close_pairs_500m": 0.0,
-    "olympic_coverage": 11.11111111111111,
-    "equity_gini": 0.7441754988844074,
-    "spatial_efficiency": 3.2821233674360486,
-    "population_served": 2201291.0
+    "olympic_coverage": 25.0,
+    "equity_gini": 0.7329409434892402,
+    "spatial_efficiency": 3.3119623873106643,
+    "population_served": 2121882.0
   },
   "pareto_front": {
     "front_size": 100,

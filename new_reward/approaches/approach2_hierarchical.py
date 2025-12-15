@@ -111,6 +111,27 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
             planting_config=constraint_config.get('planting')
         )
 
+        # Vacancy/planting priority configuration
+        planting_priority_cfg = (config or {}).get('planting_priority', {})
+        self.planting_priority_weight = planting_priority_cfg.get('weight', 0.0)
+        planting_field = planting_priority_cfg.get('field_name')
+        if not planting_field and 'planting_opportunity' in self.data.columns:
+            planting_field = 'planting_opportunity'
+
+        if planting_field and planting_field in self.data.columns:
+            valid = self.data[planting_field].dropna()
+            if not valid.empty:
+                self.planting_priority_min = float(valid.min())
+                self.planting_priority_max = float(valid.max())
+            else:
+                self.planting_priority_min = 0.0
+                self.planting_priority_max = 1.0
+            self.planting_priority_field = planting_field
+        else:
+            self.planting_priority_field = None
+            self.planting_priority_min = 0.0
+            self.planting_priority_max = 1.0
+
         # Threshold stages for graceful degradation (used by greedy optimization)
         self.threshold_stages = {
             1: {  # Preferred (current thresholds)
@@ -227,6 +248,24 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
         # Passed all thresholds
         return True
 
+    def _get_planting_priority(self, features: pd.Series) -> float:
+        """
+        Normalize planting opportunity score to [0, 1] for prioritization.
+        """
+        if not self.planting_priority_field or self.planting_priority_field not in features.index:
+            return 0.0
+
+        score = features.get(self.planting_priority_field)
+        if pd.isna(score):
+            return 0.0
+
+        span = self.planting_priority_max - self.planting_priority_min
+        if span <= 1e-9:
+            return 0.0
+
+        normalized = (score - self.planting_priority_min) / span
+        return float(max(0.0, min(1.0, normalized)))
+
     def calculate_reward(self, state: List[int], action_idx: int) -> float:
         """
         Calculate reward for placing shade at action_idx.
@@ -300,6 +339,10 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
 
         # Apply multiplicative bonuses
         multiplicative_score = base_score * heat_equity_multiplier * olympic_multiplier
+
+        planting_priority = self._get_planting_priority(features)
+        planting_multiplier = 1.0 + self.planting_priority_weight * planting_priority
+        multiplicative_score *= planting_multiplier
 
         # Apply constraints (same as Approach 1)
 
@@ -401,11 +444,16 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
 
         olympic_multiplier = 1.0 + self.olympic_bonus * venue_proximity
 
+        planting_priority = self._get_planting_priority(features)
+        planting_multiplier = 1.0 + self.planting_priority_weight * planting_priority
+
         # Base score
         base_score = sum(weighted_base.values())
 
         # Multiplicative score
-        multiplicative_score = base_score * heat_equity_multiplier * olympic_multiplier
+        multiplicative_score = (
+            base_score * heat_equity_multiplier * olympic_multiplier * planting_multiplier
+        )
 
         # Constraints
         min_dist = self.min_distance_to_state(state, action_idx)
@@ -435,8 +483,10 @@ class MultiplicativeHierarchicalReward(BaseRewardFunction):
             'multipliers': {
                 'heat_equity': heat_equity_multiplier,
                 'olympic': olympic_multiplier,
-                'combined': heat_equity_multiplier * olympic_multiplier
+                'planting_priority': planting_multiplier,
+                'combined': heat_equity_multiplier * olympic_multiplier * planting_multiplier
             },
+            'planting_priority': planting_priority,
             'penalties': penalties,
             'thresholds': {
                 'temp_threshold': self.temp_threshold,

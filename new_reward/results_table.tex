@@ -8,6 +8,7 @@
 \begin{table}[htbp]
 \centering
 \caption{Performance comparison of reward function approaches and optimization methods for cooling shade placement in Los Angeles. Best values in each section are underlined.}
+\vspace{0.1cm}
 \label{tab:results}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llrrrrr@{}}
@@ -15,7 +16,7 @@
 \textbf{Reward Function} & \textbf{Method} & \textbf{Heat Sum} & \textbf{Socio-Vuln} & \textbf{Gini} $\downarrow$ & \textbf{Population} & \textbf{Olympic \%} \\
 \midrule
 \multicolumn{7}{l}{\textit{Enhanced Weighted Sum (k=10)}} \\
-\quad Approach 1 & Greedy & 498.32 & 22.23 & 0.86 & 1,175,747 & 11.11 \\
+\quad Approach 1 & Greedy & 498.32 & 22.23 & 0.86 & \textbf{\underline{1,175,747}} & 11.11 \\
 \quad Approach 1 & KMeans & 481.92 & 15.07 & 0.86 & 1,085,786 & 22.22 \\
 \quad Approach 1 & Random & 485.36 & 13.50 & 0.87 & 1,067,766 & \textbf{\underline{55.56}} \\
 \quad Approach 1 & GA & 495.58 & 23.71 & 0.88 & 1,051,678 & 11.11 \\
@@ -24,36 +25,38 @@
 \quad Approach 1 & GreedyByTemp & \textbf{\underline{517.17}} & 23.70 & 0.96 & 357,455 & 0.00 \\
 \midrule
 \multicolumn{7}{l}{\textit{Hierarchical/Multiplicative (k=10)}} \\
-\quad Approach 2 & Greedy & 502.71 & 29.83 & \textbf{\underline{0.85}} & \textbf{\underline{1,237,772}} & 0.00 \\
-\quad Approach 2 & GA & 497.08 & 26.58 & 0.85 & 1,160,601 & 0.00 \\
+\quad Approach 2 & Greedy & 496.18 & 30.29 & \textbf{\underline{0.85}} & 1,112,701 & 0.00 \\
 \quad Approach 2 & KMeans & 481.92 & 15.07 & 0.86 & 1,085,786 & 22.22 \\
 \quad Approach 2 & Random & 485.36 & 13.50 & 0.87 & 1,067,766 & \textbf{\underline{55.56}} \\
+\quad Approach 2 & GA & 497.08 & 26.58 & \textbf{\underline{0.85}} & 1,160,601 & 0.00 \\
 \quad Approach 2 & RL & 496.06 & 36.18 & 0.87 & 1,001,749 & 0.00 \\
 \quad Approach 2 & ExpertHeuristic & 497.01 & 27.18 & 0.93 & 751,964 & 0.00 \\
 \quad Approach 2 & GreedyByTemp & \textbf{\underline{517.17}} & 23.70 & 0.96 & 357,455 & 0.00 \\
 \midrule
 \multicolumn{7}{l}{\textit{Multi-Objective NSGA-II Approach (k=10)}} \\
-\quad Approach 3 & NSGA-II & 490.18 & 30.90 & 0.87 & 1,059,577 & 0.00 \\
-\quad Approach 3 & Greedy & 488.49 & \textbf{\underline{71.38}} & 0.96 & 438,865 & 22.22 \\
+\quad Approach 3 & Greedy & 488.49 & \textbf{\underline{71.38}} & 0.96 & 393,155 & 25.00 \\
+\quad Approach 3 & NSGA-II & 487.90 & 19.39 & 0.86 & 1,092,687 & 0.00 \\
 \midrule
 \multicolumn{7}{l}{\textit{k=20 Results}} \\
 \quad Approach 1 & Greedy & 985.60 & 40.22 & \textbf{\underline{0.73}} & \textbf{\underline{2,302,162}} & 22.22 \\
 \quad Approach 1 & RL & 976.12 & 38.32 & 0.77 & 2,136,590 & 0.00 \\
-\quad Approach 2 & Greedy & \textbf{\underline{997.08}} & 59.86 & 0.73 & 2,117,586 & 0.00 \\
-\quad Approach 3 & NSGA-II & 972.84 & 44.12 & 0.74 & 2,201,291 & 11.11 \\
-\quad Approach 3 & Greedy & 975.71 & \textbf{\underline{141.88}} & 0.94 & 670,024 & \textbf{\underline{33.33}} \\
+\quad Approach 2 & Greedy & \textbf{\underline{989.67}} & 58.96 & \textbf{\underline{0.72}} & 2,021,658 & 0.00 \\
+\quad Approach 3 & Greedy & 978.84 & \textbf{\underline{141.88}} & 0.95 & 577,619 & \textbf{\underline{25.00}} \\
+\quad Approach 3 & NSGA-II & 970.78 & 40.83 & 0.73 & 2,121,882 & \textbf{\underline{25.00}} \\
 \midrule
 \multicolumn{7}{l}{\textit{k=50 Results}} \\
-\quad Approach 2 & Greedy & \textbf{\underline{2468.93}} & 143.34 & 0.47 & 3,799,341 & 55.56 \\
-\quad Approach 3 & NSGA-II & 2420.37 & 97.10 & \textbf{\underline{0.38}} & \textbf{\underline{4,516,841}} & \textbf{\underline{88.89}} \\
-\quad Approach 3 & Greedy & 2427.57 & \textbf{\underline{328.87}} & 0.90 & 1,175,814 & 66.67 \\
+\quad Approach 2 & Greedy & \textbf{\underline{2461.33}} & 135.73 & 0.43 & 3,761,429 & 50.00 \\
+\quad Approach 3 & Greedy & 2432.31 & \textbf{\underline{322.88}} & 0.90 & 1,093,333 & 50.00 \\
+\quad Approach 3 & NSGA-II & 2419.46 & 98.19 & \textbf{\underline{0.38}} & \textbf{\underline{4,208,640}} & \textbf{\underline{100.00}} \\
 \midrule
 \multicolumn{7}{l}{\textit{k=100 Results}} \\
-\quad Approach 2 & Greedy & 2565.76 & 147.09 & \textbf{\underline{0.46}} & \textbf{\underline{3,879,498}} & 55.56 \\
-\quad Approach 3 & Greedy & \textbf{\underline{4825.68}} & \textbf{\underline{565.95}} & 0.79 & 2,624,445 & \textbf{\underline{88.89}} \\
+\quad Approach 2 & Greedy & 2509.97 & 138.38 & 0.42 & 3,783,202 & 50.00 \\
+\quad Approach 3 & Greedy & 4823.68 & \textbf{\underline{556.89}} & 0.78 & 2,579,331 & 50.00 \\
+\quad Approach 3 & NSGA-II & \textbf{\underline{4833.66}} & 188.10 & \textbf{\underline{0.15}} & \textbf{\underline{4,629,376}} & \textbf{\underline{100.00}} \\
 \midrule
 \multicolumn{7}{l}{\textit{k=200 Results}} \\
-\quad Approach 2 & Greedy & \textbf{\underline{2565.76}} & \textbf{\underline{147.09}} & \textbf{\underline{0.46}} & \textbf{\underline{3,879,498}} & \textbf{\underline{55.56}} \\
+\quad Approach 2 & Greedy & 2565.76 & 147.09 & 0.46 & 3,879,498 & 55.56 \\
+\quad Approach 3 & NSGA-II & \textbf{\underline{9668.65}} & \textbf{\underline{350.75}} & \textbf{\underline{0.11}} & \textbf{\underline{4,629,376}} & \textbf{\underline{100.00}} \\
 \bottomrule
 \end{tabular}%
 }
@@ -61,17 +64,15 @@
 
 \smallskip
 \small
-\textit{Note:} Heat Sum and Socio-Vuln (socio-vulnerability) are cumulative scores (higher is better). Gini coefficient measures inequality in benefit distribution (lower is better, marked with $\downarrow$). Population indicates total population served within 500m. Olympic \% represents percentage of Olympic venues covered. Results grouped by k value (number of shade placements). Approach 3 uses multi-objective optimization with NSGA-II to explore the Pareto frontier.
+\textit{Note:} Heat Sum and Socio-Vuln (socio-vulnerability) are cumulative scores (higher is better). Gini coefficient measures inequality in benefit distribution (lower is better, marked with $\downarrow$). Population indicates total population served within 500m. Olympic \% represents percentage of Olympic venues covered. Results grouped by k value (number of shade placements). Approach 1 uses enhanced weighted sum. Approach 2 uses hierarchical/multiplicative reward. Approach 3 uses multi-objective optimization with NSGA-II to explore the Pareto frontier.
 \end{table}
 
 \vspace{0.3cm}
 
 \noindent\textbf{Key Observations:}
 
-\noindent\textit{Greedy vs. NSGA-II for Approach 3:} The greedy algorithm performs poorly with Approach 3's multi-objective reward function because it makes locally optimal decisions based on a single aggregated metric at each step, which fails to explore the Pareto frontier effectively. For instance, at k=10, Greedy achieves only 438,865 population served compared to NSGA-II's 1,059,577 (141\% improvement). Greedy's myopic selection process becomes trapped in local optima, prioritizing socio-vulnerability (71.38) at the severe expense of population coverage and equity (Gini: 0.96 vs. 0.87). NSGA-II, in contrast, maintains a diverse population of solutions across multiple objectives, enabling it to discover superior trade-offs through evolutionary search.
+\noindent\textit{Greedy vs. NSGA-II for Approach 3:} The greedy algorithm can perform poorly with Approach 3's multi-objective reward function because it makes locally optimal decisions based on aggregated metrics at each step, which may fail to explore the Pareto frontier effectively. NSGA-II, in contrast, maintains a diverse population of solutions across multiple objectives, enabling it to discover superior trade-offs through evolutionary search.
 
-\noindent\textit{NSGA-II Scalability Challenges:} NSGA-II results are absent for Approach 3 at k$\geq$100, highlighting computational and constraint-satisfaction challenges. As k increases with strict planting constraints (minimum planting opportunity $>$ 2.0), the feasible solution space becomes increasingly sparse, requiring NSGA-II to evaluate exponentially more candidate solutions. The algorithm likely exceeded computational budgets (time/memory) or failed to generate sufficient constraint-satisfying solutions within the population. This suggests the need for: (1) constraint-aware initialization strategies that seed the population with feasible solutions, (2) specialized mutation operators that preserve constraint satisfaction, (3) adaptive penalty functions that guide search toward feasible regions, and (4) hybrid approaches combining NSGA-II's exploration with local refinement.
-
-\noindent\textit{Additional Considerations:} Approach 2 NSGA-II entries were removed as they produced identical results to Greedy (Pareto front size = 1), indicating that Approach 2's single hierarchical objective function is incompatible with multi-objective optimization---NSGA-II effectively degenerates to single-objective search. The plateau observed in Approach 2 results at k=100 and k=200 (identical metrics) suggests the algorithm may have saturated available high-quality locations given the constraints, or convergence to a maximal coverage set. For large-scale deployments, hierarchical optimization strategies (e.g., spatial decomposition, incremental placement with reoptimization) or relaxed constraint formulations may be necessary to maintain solution quality and computational tractability.
+\noindent\textit{NSGA-II Scalability:} NSGA-II may face computational and constraint-satisfaction challenges at larger k values. As k increases with strict planting constraints, the feasible solution space becomes increasingly sparse, requiring more evaluations to find satisfactory solutions.
 
 \end{document}

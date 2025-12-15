@@ -241,7 +241,7 @@ class PlantingOpportunityConstraint:
     """
 
     def __init__(self,
-                 field_name: str = 'planting_opportunity',
+                 field_name: Optional[str] = 'planting_opportunity',
                  min_threshold: float = 4.0,
                  use_hard_constraint: bool = True):
         """
@@ -271,7 +271,7 @@ class PlantingOpportunityConstraint:
         Returns:
             True if location meets planting opportunity threshold
         """
-        if self.field_name not in features.index:
+        if not self.field_name or self.field_name not in features.index:
             # If field missing, assume plantable (backward compatibility)
             return True
 
@@ -291,7 +291,7 @@ class PlantingOpportunityConstraint:
             - planting_score if soft constraint (proportional to opportunity)
             - 1.0 if plantable
         """
-        if self.field_name not in features.index:
+        if not self.field_name or self.field_name not in features.index:
             # No planting data - no penalty
             return 1.0
 
